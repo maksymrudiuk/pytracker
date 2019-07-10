@@ -1,5 +1,9 @@
 from django.contrib import admin
-from .models import Project, Task, Comment, DeveloperInProject, TimeLogging
+from .models import (Project,
+                     Task,
+                     Comment,
+                     DeveloperInProject,
+                     TimeLogging)
 
 
 class CommentInline(admin.TabularInline):
@@ -24,12 +28,25 @@ class TaskInline(admin.TabularInline):
     extra = 0
 
 class ProjectAdmin(admin.ModelAdmin):
+
     inlines = [
         DeveloperInProjectInline,
         TaskInline,
     ]
 
 class TaskAdmin(admin.ModelAdmin):
+
+    fieldsets = (
+        ("General",
+            {'fields': ('topic', 'description', 'task_type', 'priority')}
+        ),
+        ("Relations",
+            {'fields': ('project', 'creator', 'performer')}
+        ),
+                ("Time Managment",
+            {'fields': ('start_date', 'end_date', 'estimated_time')}
+        )
+    )
     inlines = [
         CommentInline,
     ]
@@ -39,4 +56,5 @@ class TaskAdmin(admin.ModelAdmin):
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Task, TaskAdmin)
 admin.site.register(Comment)
+admin.site.register(DeveloperInProject)
 admin.site.register(TimeLogging)

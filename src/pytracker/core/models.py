@@ -60,7 +60,7 @@ class Task(models.Model):
         blank=False
     )
 
-    desciption = tinymce_models.HTMLField(
+    description = tinymce_models.HTMLField(
         "Desrciption"
     )
 
@@ -166,7 +166,7 @@ class DeveloperInProject(models.Model):
 
     def __str__(self):
         """Unicode representation of DeveloperInProject."""
-        return "%s - %s" % (self.developer.username, self.project.name)
+        return "%s - %s" % (self.developer, self.project.name)
 
 
 class TimeLogging(models.Model):
@@ -191,4 +191,4 @@ class TimeLogging(models.Model):
 
     def __str__(self):
         """Unicode representation of TimeLogging."""
-        return "%s" % (self.task.topic)
+        return "%s" % (self.task)
