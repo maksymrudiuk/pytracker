@@ -181,6 +181,14 @@ class TimeLogging(models.Model):
 
     spent_time = models.SmallIntegerField()
 
+    notes = models.TextField()
+
+    task = models.ForeignKey(
+        'core.Task',
+        null=True,
+        on_delete=models.CASCADE
+    )
+
     def __str__(self):
         """Unicode representation of TimeLogging."""
-        pass
+        return "%s" % (self.task.topic)

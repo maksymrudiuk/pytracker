@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Project, Task, Comment, DeveloperInProject
+from .models import Project, Task, Comment, DeveloperInProject, TimeLogging
 
 
 class CommentInline(admin.TabularInline):
@@ -39,3 +39,4 @@ class TaskAdmin(admin.ModelAdmin):
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Task, TaskAdmin)
 admin.site.register(Comment)
+admin.site.register(TimeLogging)
