@@ -1,0 +1,45 @@
+{% extends "../base.html" %}
+
+{% block info_message %}
+{% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ form.non_field_errors }}
+    </div>
+{% endif %}
+{% endblock info_message %}
+
+{% block content %}
+<div class="row text-center">
+    <div class="col-md-12">
+        <form class="form-signin" method="post">
+            {% csrf_token %}
+            <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+            <label for="inputUsername" class="sr-only">Username</label>
+            <input
+                type="text"
+                name="username"
+                id="inputUsername"
+                class="form-control"
+                placeholder="Username"
+                required=""
+                autofocus="">
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input
+                type="password"
+                name="password"
+                id="inputPassword"
+                class="form-control"
+                placeholder="Password"
+                required="">
+            <button
+                class="btn btn-lg btn-primary btn-block signin-btn"
+                type="submit">
+                Sign in
+            </button>
+            <p class="mt-5 mb-3 text-muted">© 2019</p>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+
