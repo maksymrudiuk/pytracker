@@ -1,4 +1,5 @@
 from django.db import models
+from django.template.defaultfilters import slugify
 from tinymce import models as tinymce_models
 
 # Create your models here.
@@ -12,13 +13,23 @@ class Project(models.Model):
         verbose_name_plural = 'Projects'
 
     slug_id = models.SlugField(
-        "Unique string id"
+        "Unique string id",
+        max_length=255,
+        unique=True,
+        blank=True
     )
 
     name = models.CharField(
         "Name",
         max_length=200,
         blank=False
+    )
+
+    owner = models.ForeignKey(
+        'user.UserProfile',
+        related_name='project_owner',
+        null=True,
+        on_delete=models.CASCADE
     )
 
     developers = models.ManyToManyField(
@@ -28,6 +39,12 @@ class Project(models.Model):
     description = tinymce_models.HTMLField(
         "Desrciption"
     )
+
+    def save(self, *args, **kwargs):
+        super(Project, self).save(*args, **kwargs)
+        if not self.slug_id:
+            self.slug_id = slugify(self.name) + '-' + str(self.id)
+            self.save()
 
     def __str__(self):
         """Unicode representation of Project."""
