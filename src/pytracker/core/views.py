@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.detail import DetailView
 
 from django.template.defaultfilters import slugify
 
@@ -33,6 +34,21 @@ class HomeView(View):
                 developers.add(developer)
 
         return developers
+
+class ProjectDetailView(DetailView):
+
+    slug_field = 'slug_id'
+    slug_url_kwarg = 'slug'
+
+    def get_queryset(self):
+
+        if self.request.user.is_authenticated:
+            queryset = Project.objects.filter(owner=self.request.user)
+        else:
+            queryset = Project.objects.none()
+
+        return queryset
+
 
 
 class ProjectsCreateView(CreateView):

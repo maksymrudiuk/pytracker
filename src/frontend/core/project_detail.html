@@ -1,0 +1,48 @@
+{% extends "../base.html" %}
+
+{% load static from staticfiles %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    <!-- My Projects Section Start -->
+    <div class="row">
+        <div class="col-lg-12 card-container">
+
+            <div class="card project-view">
+                <div class="card-header">
+                    {{ project.slug_id }}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ project.name }}</h5>
+                    <p class="card-text">{{ project.description | safe }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- My Projects Section End -->
+{% else %}
+<div class="row text-center">
+    <div class="col-lg-12">
+        <h1>You are not logged in</h1>
+        <div class="row">
+            <div class="col-lg-2 offset-lg-4">
+                <a
+                    class="btn btn-outline-info"
+                    role="button"
+                    href="{% url 'login' %}">
+                    Login
+                </a>
+            </div>
+            <div class="col-lg-2">
+                <a
+                    class="btn btn-outline-success"
+                    role="button"
+                    href="{% url 'signup' %}">
+                    Sign Up
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}
