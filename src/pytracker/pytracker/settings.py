@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.forms',
     'crispy_forms',
     'tinymce',
     'core',
@@ -134,6 +135,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # Custom user model
 AUTH_USER_MODEL = 'user.UserProfile'
 
-
+# Login/Logout
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'

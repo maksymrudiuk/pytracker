@@ -1,10 +1,13 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser, Group
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 class UserProfile(AbstractUser):
+    """ Model definition for UserProfile. """
 
     class Meta:
+        """ Meta definition for UserProfile. """
+
         verbose_name = "User"
         verbose_name_plural = "Users"
 
@@ -49,9 +52,11 @@ class UserProfile(AbstractUser):
         return self.get_short_name()
 
     @property
-    def isAdmin(self):
+    def is_admin(self):
+        """ Check user role. """
         return self.position == 1
 
     @property
-    def isDeveloper(self):
+    def is_developer(self):
+        """ Check user role. """
         return self.position == 2

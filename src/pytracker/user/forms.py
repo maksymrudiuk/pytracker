@@ -1,15 +1,20 @@
 from django import forms
-from .models import UserProfile
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column
+from crispy_forms.layout import Submit
+
+from .models import UserProfile
 
 class BaseSignUpUserProfileForm(forms.ModelForm):
 
-    password1 = forms.CharField(label='Password',  widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Confirm Password',  widget=forms.PasswordInput)
+    """ Base User Register Form. """
+
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
 
     class Meta:
+        """ Meta definition for BaseSignUpUserProfile. """
+
         model = UserProfile
         fields = ('username', 'email')
 
@@ -23,6 +28,9 @@ class BaseSignUpUserProfileForm(forms.ModelForm):
         self.helper.add_input(Submit('submit', 'Sign Up'))
 
     def clean_password2(self):
+
+        """ Check the two passwords for equality """
+
         password1 = self.cleaned_data.get('password1')
         password2 = self.cleaned_data.get('password2')
 
@@ -39,8 +47,11 @@ class BaseSignUpUserProfileForm(forms.ModelForm):
 
 
 class UpdateUserProfileForm(forms.ModelForm):
+    """ Update User Profile Form. """
 
     class Meta:
+        """ Meta definition for UpdateUserProfile. """
+
         model = UserProfile
         fields = ('first_name', 'last_name', 'photo', 'date_of_birth', 'position')
 

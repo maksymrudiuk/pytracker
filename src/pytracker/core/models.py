@@ -4,10 +4,10 @@ from tinymce import models as tinymce_models
 
 # Create your models here.
 class Project(models.Model):
-    """Model definition for Project."""
+    """ Model definition for Project. """
 
     class Meta:
-        """Meta definition for Project."""
+        """ Meta definition for Project. """
 
         verbose_name = 'Project'
         verbose_name_plural = 'Projects'
@@ -40,7 +40,7 @@ class Project(models.Model):
         "Desrciption"
     )
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs):  # pylint: disable=arguments-differ
         super(Project, self).save(*args, **kwargs)
         if not self.slug_id:
             self.slug_id = slugify(self.name) + '-' + str(self.id)
@@ -81,9 +81,13 @@ class Task(models.Model):
         "Desrciption"
     )
 
-    start_date = models.DateTimeField()
+    start_date = models.DateTimeField(
+        null=True
+    )
 
-    end_date = models.DateTimeField()
+    end_date = models.DateTimeField(
+        null=True
+    )
 
     task_type = models.SmallIntegerField(
         "Task type",
@@ -110,6 +114,7 @@ class Task(models.Model):
         'user.UserProfile',
         related_name='user_performer',
         null=True,
+        blank=True,
         on_delete=models.SET_NULL
     )
 
@@ -126,8 +131,6 @@ class Task(models.Model):
 
 class Comment(models.Model):
     """Model definition for Comment."""
-
-    # TODO: Define fields here
 
     class Meta:
         """Meta definition for Comment."""
@@ -162,7 +165,6 @@ class Comment(models.Model):
 class DeveloperInProject(models.Model):
     """Model definition for DeveloperInProject."""
 
-
     class Meta:
         """Meta definition for DeveloperInProject."""
 
@@ -188,7 +190,6 @@ class DeveloperInProject(models.Model):
 
 class TimeLogging(models.Model):
     """Model definition for TimeLogging."""
-
 
     class Meta:
         """Meta definition for TimeLogging."""

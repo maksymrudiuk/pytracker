@@ -5,6 +5,8 @@ verify_ssl = true
 
 [dev-packages]
 pylint = "*"
+pylint-django = "*"
+v = {editable = true,version = "*"}
 
 [packages]
 django = "*"

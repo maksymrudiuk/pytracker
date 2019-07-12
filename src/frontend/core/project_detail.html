@@ -5,12 +5,17 @@
 {% block content %}
 {% if user.is_authenticated %}
     <!-- My Projects Section Start -->
+    <div class="row text-center">
+        <div class="col-lg-12">
+            <h1>{{ project.name }}&nbsp;Overview</h1>
+        </div>
+    </div>
     <div class="row">
         <div class="col-lg-12 card-container">
 
             <div class="card project-view">
                 <div class="card-header">
-                    {{ project.slug_id }}
+                    General
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">{{ project.name }}</h5>
@@ -20,6 +25,78 @@
         </div>
     </div>
     <!-- My Projects Section End -->
+    <div class="row">
+        <div class="col-lg-12 card-container">
+
+            <div class="card project-view">
+                <div class="card-header">
+                    <span class="header-title">Tasks</span>
+                    <a
+                        href="{% url 'create_task' slug=project.slug_id %}"
+                        role="button"
+                        class="btn btn-success add-new-btn">
+                        <span><b>Add</b></span>
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if tasks %}
+                    {% for task in tasks %}
+                    <div class="card text-white bg-success task">
+                        <div class="card-header">{{ task.topic }}&nbsp;{{ task.get_task_type_display }}</div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ task.get_priority_display }}</h5>
+                            <p class="card-text">{{ task.description | safe }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <h3>You don`t add tasks in this Project</h3>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <span class="header-title">Team</span>
+                    <a
+                        href="{% url 'create_project' %}"
+                        role="button"
+                        class="btn btn-success add-new-btn">
+                        <span><b>Add</b></span>
+                    </a>
+                </div>
+                <div class="card-body">
+                    {% if project.developers.all %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">First</th>
+                                <th scope="col">Last</th>
+                                <th scope="col">Username</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for developer in project.developers.all %}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ developer.first_name }}</td>
+                                    <td>{{ developer.last_name }}</td>
+                                    <td>{{ developer.username }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <h3>You don`t add developers in this Project</h3>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% else %}
 <div class="row text-center">
     <div class="col-lg-12">

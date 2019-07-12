@@ -7,6 +7,8 @@ from .models import (Project,
 
 
 class CommentInline(admin.TabularInline):
+    """ Config Comment inline display in Tasks. """
+
     model = Comment
     fields = ('owner', 'comment', 'date_of_add')
     readonly_fields = ('owner', 'comment', 'date_of_add')
@@ -14,6 +16,8 @@ class CommentInline(admin.TabularInline):
     extra = 0
 
 class DeveloperInProjectInline(admin.TabularInline):
+    """ Config Developers inline display in Project. """
+
     model = DeveloperInProject
     verbose_name = "Developer"
     verbose_name_plural = "Developers"
@@ -21,6 +25,8 @@ class DeveloperInProjectInline(admin.TabularInline):
     extra = 0
 
 class TaskInline(admin.TabularInline):
+    """ Config Tasks inline display in Project. """
+
     model = Task
     fields = ('topic', 'priority', 'start_date', 'end_date', 'estimated_time')
     readonly_fields = ('topic', 'priority', 'start_date', 'end_date', 'estimated_time')
@@ -28,6 +34,7 @@ class TaskInline(admin.TabularInline):
     extra = 0
 
 class ProjectAdmin(admin.ModelAdmin):
+    """ Config Projects display. """
 
     inlines = [
         DeveloperInProjectInline,
@@ -35,16 +42,33 @@ class ProjectAdmin(admin.ModelAdmin):
     ]
 
 class TaskAdmin(admin.ModelAdmin):
+    """ Config Projects display. """
 
     fieldsets = (
         ("General",
-            {'fields': ('topic', 'description', 'task_type', 'priority')}
+         {'fields': (
+             'topic',
+             'description',
+             'task_type',
+             'priority'
+             )
+         }
         ),
         ("Relations",
-            {'fields': ('project', 'creator', 'performer')}
+         {'fields': (
+             'project',
+             'creator',
+             'performer'
+             )
+         }
         ),
-                ("Time Managment",
-            {'fields': ('start_date', 'end_date', 'estimated_time')}
+        ("Time Managment",
+         {'fields': (
+             'start_date',
+             'end_date',
+             'estimated_time'
+             )
+         }
         )
     )
     inlines = [
