@@ -1,14 +1,22 @@
 from django.shortcuts import render
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic.edit import CreateView, UpdateView
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
+from django.views.generic.base import TemplateView
+from django.http import JsonResponse
 
 from django.template.defaultfilters import slugify
 
-from .models import Project, Task, Comment
-from .forms import ProjectCreateForm, TaskCreateForm
+from .models import Project, Task, Comment, DeveloperInProject
+from user.models import UserProfile
+from .forms import (ProjectCreateForm,
+                    TaskCreateForm,
+                    TaskUpdateForm)
 
 
 # Create your views here.
@@ -38,6 +46,46 @@ class HomeView(View):
                 developers.add(developer)
 
         return developers
+
+
+class DevelopersView(TemplateView):
+    """ Developers View definition. """
+    template_name = 'core/developers_list.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(DevelopersView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+
+        developers_in_project = Project.objects.get(slug_id=kwargs['slug']).developers.all()
+        developers = UserProfile.objects.filter(position=2)
+
+        context = super(DevelopersView, self).get_context_data(**kwargs)
+        context['update_url'] = reverse_lazy(
+            'add_developer_in_project',
+            kwargs={'slug': kwargs['slug']})
+        context['project_slug_id'] = kwargs['slug']
+
+        if not developers_in_project:
+            context['developers'] = developers
+        else:
+            context['developers'] = developers.exclude(pk__in=developers_in_project)
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+
+        data = request.POST
+
+        developer = UserProfile.objects.get(pk=data['pk'])
+        project = Project.objects.get(slug_id=data['slug'])
+
+        obj = DeveloperInProject(
+            developer=developer,
+            project=project)
+        obj.save()
+        return JsonResponse({'key': 'success'})
 
 
 class ProjectDetailView(DetailView):  # pylint: disable=too-many-ancestors
@@ -91,13 +139,16 @@ class ProjectsCreateView(CreateView):  # pylint: disable=too-many-ancestors
             # Add slud id
             obj.slug_id = slugify(obj.name) + '-' + str(obj.id)
             obj.save()
-            return HttpResponseRedirect(reverse_lazy('home'))
+            messages.success(request, 'Project successful created')
+            return HttpResponseRedirect(reverse_lazy(
+                'project_detail',
+                kwargs={'slug': obj.slug_id}))
 
         return render(request, 'core/form.html', {'form': form})
 
 
 class TaskCreateView(CreateView):  # pylint: disable=too-many-ancestors
-    """ TaskCreate View definition. """
+    """ Task Create View definition. """
 
     model = Task
 
@@ -105,7 +156,7 @@ class TaskCreateView(CreateView):  # pylint: disable=too-many-ancestors
 
         context = {
             'form': TaskCreateForm,
-            'title': 'Create Task'
+            'title': 'Add Task'
         }
 
         return render(request, 'core/form.html', context)
@@ -122,6 +173,67 @@ class TaskCreateView(CreateView):  # pylint: disable=too-many-ancestors
             obj.creator = self.request.user
             obj.project = Project.objects.get(slug_id=self.kwargs['slug'])
             obj.save()
-            return HttpResponseRedirect(reverse_lazy('home'))
+            return HttpResponseRedirect(reverse_lazy(
+                'project_detail',
+                kwargs={'slug': self.kwargs['slug']}))
 
         return render(request, 'core/form.html', {'form': form})
+
+
+class TaskUpdateView(UpdateView):
+
+    model = Task
+    template_name = "core/form.html"
+    form_class = TaskUpdateForm
+
+
+    def get_success_url(self):
+        return reverse_lazy('project_detail', kwargs={'slug': self.kwargs['slug']})
+
+    def post(self, request, *args, **kwargs):
+
+        if request.POST.get('cancel_btn'):
+            messages.warning(request, 'Task editing is canceled')
+            return HttpResponseRedirect(reverse_lazy(
+                'project_detail',
+                kwargs={'slug': self.kwargs['slug']}))
+        else:
+            messages.success(request, 'Task successful saved')
+            return super(TaskUpdateView, self).post(
+                request,
+                *args,
+                **kwargs
+            )
+
+class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
+    """ Task Delete View definition. """
+
+    model = Task
+    template_name = "core/confirm_delete.html"
+    context_object_name = 'context'
+
+    def get_context_data(self, **kwargs):
+        context = super(TaskDeleteView, self).get_context_data(**kwargs)
+        context['question'] = 'Do you want delete Task'
+        context['title'] = 'Delete Task'
+        context['context_url'] = 'delete_task'
+        context['context_task_id'] = self.kwargs['pk']
+        context['context_project_slug_id'] = self.kwargs['slug']
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('project_detail', kwargs={'slug': self.kwargs['slug']})
+
+    def post(self, request, *args, **kwargs):
+        if request.POST.get('cancel_button'):
+            messages.warning(request, 'Task deleting is canceled')
+            return HttpResponseRedirect(reverse_lazy(
+                'project_detail',
+                kwargs={'slug': self.kwargs['slug']}))
+        else:
+            messages.success(request, 'Task successful delete')
+            return super(TaskDeleteView, self).post(
+                request,
+                *args,
+                **kwargs
+            )

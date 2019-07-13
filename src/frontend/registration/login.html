@@ -1,12 +1,12 @@
 {% extends "../base.html" %}
 
-{% block info_message %}
+{% block status_message %}
 {% if form.errors %}
     <div class="alert alert-danger" role="alert">
         {{ form.non_field_errors }}
     </div>
 {% endif %}
-{% endblock info_message %}
+{% endblock status_message %}
 
 {% block content %}
 <div class="row text-center">

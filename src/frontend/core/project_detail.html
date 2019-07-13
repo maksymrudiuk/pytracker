@@ -34,15 +34,31 @@
                     <a
                         href="{% url 'create_task' slug=project.slug_id %}"
                         role="button"
-                        class="btn btn-success add-new-btn">
+                        class="btn btn-success left-card-btn">
                         <span><b>Add</b></span>
                     </a>
                 </div>
                 <div class="card-body">
                     {% if tasks %}
                     {% for task in tasks %}
-                    <div class="card text-white bg-success task">
-                        <div class="card-header">{{ task.topic }}&nbsp;{{ task.get_task_type_display }}</div>
+                    <div class="card bg-light task">
+                        <div class="card-header">
+                            <span class="header-title">
+                                {{ task.topic }}&nbsp;{{ task.get_task_type_display }}
+                            <span>
+                            <a
+                                href="{% url 'delete_task' slug=project.slug_id pk=task.id %}"
+                                role="button"
+                                class="btn btn-danger left-card-btn">
+                                <span><b>Delete</b></span>
+                            </a>
+                            <a
+                                href="{% url 'edit_task' slug=project.slug_id pk=task.id %}"
+                                role="button"
+                                class="btn btn-info left-card-btn">
+                                <span><b>Edit</b></span>
+                            </a>
+                        </div>
                         <div class="card-body">
                             <h5 class="card-title">{{ task.get_priority_display }}</h5>
                             <p class="card-text">{{ task.description | safe }}</p>
@@ -62,9 +78,9 @@
                 <div class="card-header">
                     <span class="header-title">Team</span>
                     <a
-                        href="{% url 'create_project' %}"
+                        href="{% url 'add_developer_in_project' slug=project.slug_id %}"
                         role="button"
-                        class="btn btn-success add-new-btn">
+                        class="btn btn-success left-card-btn">
                         <span><b>Add</b></span>
                     </a>
                 </div>
