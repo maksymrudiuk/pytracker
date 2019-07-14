@@ -1,11 +1,16 @@
-from django.urls import path
+from django.urls import path, re_path
 from . import views
 
 urlpatterns = [
-    path(
-        '',
+    re_path(
+        r'^$',
         views.HomeView.as_view(),
         name="home"),
+    path(
+        'project/list/',
+        views.ProjectListView.as_view(),
+        name='project_list'
+    ),
     path(
         'project/add/',
         views.ProjectsCreateView.as_view(),

@@ -63,12 +63,14 @@
             {% if user.is_authenticated %}
                 <div class="collapse navbar-collapse" id="navbarText">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="{% url 'home' %}">Overview</a>
-                        </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Projects</a>
+                            <a class="nav-link {{ home_page }}" href="{% url 'home' %}">Overview</a>
                         </li>
+                        {% if user.is_developer %}
+                        <li class="nav-item">
+                            <a class="nav-link {{ projects_page }}" href="{% url 'project_list' %}">Projects</a>
+                        </li>
+                        {% endif %}
                     </ul>
                     <div>
                         <a

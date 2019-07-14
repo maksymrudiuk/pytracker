@@ -1,23 +1,34 @@
+# Django Imports
 from django.shortcuts import render
 from django.contrib import messages
-from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
+from django.http import (
+    HttpResponseRedirect,
+    JsonResponse)
 from django.views import View
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.views.generic.detail import DetailView
+from django.views.generic import ListView
 from django.views.generic.base import TemplateView
-from django.http import JsonResponse
-
+from django.views.generic.edit import (
+    CreateView,
+    UpdateView,
+    DeleteView)
+from django.views.generic.detail import DetailView
 from django.template.defaultfilters import slugify
-
-from .models import Project, Task, Comment, DeveloperInProject
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+# Local modules
 from user.models import UserProfile
-from .forms import (ProjectCreateForm,
-                    TaskCreateForm,
-                    TaskUpdateForm,
-                    CommentForm)
+from .models import (
+    Project,
+    Task,
+    Comment,
+    DeveloperInProject)
+from .forms import (
+    ProjectCreateForm,
+    TaskCreateForm,
+    TaskUpdateForm,
+    CommentForm)
+from .utils import paginate
 
 
 # Create your views here.
@@ -37,6 +48,8 @@ class HomeView(View):
                 context['developers'] = self.get_developers_list(context['projects'])
             elif self.request.user.is_developer:
                 context['projects'] = Project.objects.filter(developers=self.request.user)
+
+            context['home_page'] = 'active'
 
 
             return render(request, 'core/overview.html', context=context)
@@ -93,6 +106,24 @@ class DevelopersView(TemplateView):
             project=project)
         obj.save()
         return JsonResponse({'key': 'success'})
+
+
+
+class ProjectListView(ListView):  # pylint: disable=too-many-ancestors
+    """ ProjectList View definition. """
+    model = Project
+    template_name = "core/project_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ProjectListView, self).get_context_data(**kwargs)
+        context = paginate(
+            queryset=context['object_list'],
+            pages=5,
+            request=self.request,
+            context=context,
+            queryset_name='projects')
+        context['projects_page'] = 'active'
+        return context
 
 
 class ProjectDetailView(DetailView):  # pylint: disable=too-many-ancestors
@@ -188,7 +219,8 @@ class TaskCreateView(CreateView):  # pylint: disable=too-many-ancestors
         return render(request, 'core/form.html', {'form': form})
 
 
-class TaskUpdateView(UpdateView):
+class TaskUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
+    """ TaskUpdate View definition. """
 
     model = Task
     template_name = "core/form.html"
@@ -214,7 +246,9 @@ class TaskUpdateView(UpdateView):
             )
 
 
-class TaskDetailView(DetailView):
+class TaskDetailView(DetailView):  # pylint: disable=too-many-ancestors
+    """ TaskDetail View definition. """
+
     model = Task
     template_name = "core/task_detail.html"
 
@@ -279,7 +313,9 @@ class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
             )
 
 
-class CommentCreateView(CreateView):
+class CommentCreateView(CreateView):  # pylint: disable=too-many-ancestors
+    """ Comment View definition. """
+
     model = Comment
 
     def get(self, request, *args, **kwargs):
@@ -308,4 +344,3 @@ class CommentCreateView(CreateView):
             ))
 
         return render(request, 'core/form.html', {'form': form})
-

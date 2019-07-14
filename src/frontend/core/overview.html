@@ -43,7 +43,10 @@
                     <hr>
                     <div class="row">
                         <div class="col-lg-12 card-container">
-
+                            {% if not projects and user.is_developer %}
+                                The admin has not added you to any project.
+                                You can see avialable <a href="{% url 'project_list' %}">projects</a>.
+                            {% endif %}
                             {% for project in projects %}
                             <div class="card project-view">
                                 <div class="card-header">
