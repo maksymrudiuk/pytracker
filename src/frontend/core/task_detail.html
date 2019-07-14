@@ -1,0 +1,120 @@
+{% extends "../base.html" %}
+
+{% load static from staticfiles %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<!-- Task Detail Section Start -->
+<div class="row text-center">
+    <div class="col-lg-12">
+        <h1>{{ task.topic }}&nbsp;Overview</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 card-container">
+
+        <div class="card project-view">
+            <div class="card-header">
+                General
+                <a
+                    href="{% url 'delete_task' slug=project_slug_id pk=task.id %}"
+                    role="button"
+                    class="btn btn-danger left-card-btn">
+                    <span><b>Delete</b></span>
+                </a>
+                <a
+                    href="{% url 'edit_task' slug=project_slug_id pk=task.id %}"
+                    role="button"
+                    class="btn btn-info left-card-btn">
+                    <span><b>Edit</b></span>
+                </a>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <b>Type:</b>&nbsp;
+                    {{ task.get_task_type_display }}
+                </p>
+                <p class="card-text">
+                    <b>Priority:</b>&nbsp;
+                    {{ task.get_priority_display }}
+                </p>
+                <p class="card-text">
+                    <b>Creator:</b>&nbsp;
+                    {{ task.creator.first_name }}
+                    {{ task.creator.last_name }}
+                </p>
+                <p class="card-text">
+                    <b>Performer:</b>&nbsp;
+                    {% if task.performer %}
+                        {{ task.performer }}
+                    {% else %}
+                        Task is Free
+                    {% endif %}
+                </p>
+                <p class="card-text">
+                    <b>Description:</b>&nbsp;
+                    {{ task.description | safe }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 card-container">
+
+        <div class="card project-view">
+            <div class="card-header">
+                <span class="header-title">Comments</span>
+                <a
+                    href="{% url 'add_comment' slug=project_slug_id pk=task.id %}"
+                    role="button"
+                    class="btn btn-success left-card-btn">
+                    <span><b>Add</b></span>
+                </a>
+            </div>
+            <div class="card-body">
+                {% if comments %}
+                {% for comment in comments %}
+
+                <div class="card bg-light task">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ comment.owner }}&nbsp;{{ comment.date_of_add }}</h5>
+                        <p class="card-text">{{ comment.comment }}</p>
+                    </div>
+                </div>
+
+                {% endfor %}
+                {% else %}
+                <h3>Comments have not been added yet</h3>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Task Detail Section End -->
+{% else %}
+<div class="row text-center">
+    <div class="col-lg-12">
+        <h1>You are not logged in</h1>
+        <div class="row">
+            <div class="col-lg-2 offset-lg-4">
+                <a
+                    class="btn btn-outline-info"
+                    role="button"
+                    href="{% url 'login' %}">
+                    Login
+                </a>
+            </div>
+            <div class="col-lg-2">
+                <a
+                    class="btn btn-outline-success"
+                    role="button"
+                    href="{% url 'signup' %}">
+                    Sign Up
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock content %}

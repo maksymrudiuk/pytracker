@@ -16,7 +16,8 @@ from .models import Project, Task, Comment, DeveloperInProject
 from user.models import UserProfile
 from .forms import (ProjectCreateForm,
                     TaskCreateForm,
-                    TaskUpdateForm)
+                    TaskUpdateForm,
+                    CommentForm)
 
 
 # Create your views here.
@@ -75,7 +76,7 @@ class DevelopersView(TemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
-
+        """ POST method processing. """
         data = request.POST
 
         developer = UserProfile.objects.get(pk=data['pk'])
@@ -168,8 +169,6 @@ class TaskCreateView(CreateView):  # pylint: disable=too-many-ancestors
         if form.is_valid:
 
             obj = form.save(commit=False)
-            print(dir(obj))
-            print(obj.end_date)
             obj.creator = self.request.user
             obj.project = Project.objects.get(slug_id=self.kwargs['slug'])
             obj.save()
@@ -205,6 +204,25 @@ class TaskUpdateView(UpdateView):
                 **kwargs
             )
 
+
+class TaskDetailView(DetailView):
+    model = Task
+    template_name = "core/task_detail.html"
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            queryset = Task.objects.filter(creator=self.request.user)
+        else:
+            queryset = Task.objects.none()
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(TaskDetailView, self).get_context_data(**kwargs)
+        context['project_slug_id'] = self.kwargs['slug']
+        context['comments'] = Comment.objects.filter(for_task=self.object)
+        return context
+
 class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
     """ Task Delete View definition. """
 
@@ -237,3 +255,35 @@ class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
                 *args,
                 **kwargs
             )
+
+
+class CommentCreateView(CreateView):
+    model = Comment
+
+    def get(self, request, *args, **kwargs):
+
+        context = {
+            'form': CommentForm,
+            'title': 'Add Comment'
+        }
+        return render(request, 'core/form.html', context=context)
+
+    def post(self, request, *args, **kwargs):
+
+        form = CommentForm(self.request.POST)
+
+        if form.is_valid:
+            obj = form.save(commit=False)
+            obj.owner = request.user
+            obj.for_task = Task.objects.get(pk=kwargs['pk'])
+            obj.save()
+            return HttpResponseRedirect(reverse_lazy(
+                'detail_task',
+                kwargs={
+                    'slug': kwargs['slug'],
+                    'pk': kwargs['pk']
+                }
+            ))
+
+        return render(request, 'core/form.html', {'form': form})
+
