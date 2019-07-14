@@ -30,9 +30,15 @@ class HomeView(View):
         context = {}
 
         if self.request.user.is_authenticated:
-            user = self.request.user
-            context['projects'] = Project.objects.filter(owner=user)
-            context['developers'] = self.get_developers_list(context['projects'])
+
+            if self.request.user.is_admin:
+                user = self.request.user
+                context['projects'] = Project.objects.filter(owner=user)
+                context['developers'] = self.get_developers_list(context['projects'])
+            elif self.request.user.is_developer:
+                context['projects'] = Project.objects.filter(developers=self.request.user)
+
+
             return render(request, 'core/overview.html', context=context)
 
         return render(request, 'core/overview.html', context=None)
@@ -98,7 +104,10 @@ class ProjectDetailView(DetailView):  # pylint: disable=too-many-ancestors
     def get_queryset(self):
 
         if self.request.user.is_authenticated:
-            queryset = Project.objects.filter(owner=self.request.user)
+            if self.request.user.is_admin:
+                queryset = Project.objects.filter(owner=self.request.user)
+            elif self.request.user.is_developer:
+                queryset = Project.objects.filter(developers=self.request.user)
         else:
             queryset = Project.objects.none()
 
@@ -211,7 +220,10 @@ class TaskDetailView(DetailView):
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            queryset = Task.objects.filter(creator=self.request.user)
+            if self.request.user.is_admin:
+                queryset = Task.objects.filter(creator=self.request.user)
+            elif self.request.user.is_developer:
+                queryset = Task.objects.filter(project__slug_id=self.kwargs['slug'])
         else:
             queryset = Task.objects.none()
 
@@ -222,6 +234,14 @@ class TaskDetailView(DetailView):
         context['project_slug_id'] = self.kwargs['slug']
         context['comments'] = Comment.objects.filter(for_task=self.object)
         return context
+
+    def post(self, request, *args, **kwargs):
+        data = request.POST
+
+        task = Task.objects.get(pk=data['task_id'])
+        task.performer = UserProfile.objects.get(pk=data['pk'])
+        task.save()
+        return JsonResponse({'key': 'success'})
 
 class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
     """ Task Delete View definition. """

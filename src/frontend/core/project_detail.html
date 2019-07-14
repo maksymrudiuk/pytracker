@@ -31,12 +31,14 @@
             <div class="card project-view">
                 <div class="card-header">
                     <span class="header-title">Tasks</span>
+                    {% if user.is_admin %}
                     <a
                         href="{% url 'create_task' slug=project.slug_id %}"
                         role="button"
                         class="btn btn-success left-card-btn">
                         <span><b>Add</b></span>
                     </a>
+                    {% endif %}
                 </div>
                 <div class="card-body">
                     {% if tasks %}
@@ -46,12 +48,14 @@
                             <span class="header-title">
                                 {{ task.topic }}&nbsp;{{ task.get_task_type_display }}
                             <span>
+                            {% if user.is_admin %}
                             <a
                                 href="{% url 'delete_task' slug=project.slug_id pk=task.id %}"
                                 role="button"
                                 class="btn btn-danger left-card-btn">
                                 <span><b>Delete</b></span>
                             </a>
+                            {% endif %}
                             <a
                                 href="{% url 'edit_task' slug=project.slug_id pk=task.id %}"
                                 role="button"
@@ -71,12 +75,17 @@
                     </div>
                     {% endfor %}
                     {% else %}
-                    <h3>You don`t add tasks in this Project</h3>
+                        {% if user.is_admin %}
+                            <h3>You don`t add tasks in this Project</h3>
+                        {% elif user.is_developer%}
+                            <h3>Admin did not add tasks to the project yet</h3>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
+    {% if user.is_admin %}
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -118,6 +127,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 {% else %}
 <div class="row text-center">
     <div class="col-lg-12">
