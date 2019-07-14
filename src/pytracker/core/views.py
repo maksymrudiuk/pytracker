@@ -233,6 +233,7 @@ class TaskDetailView(DetailView):
         context = super(TaskDetailView, self).get_context_data(**kwargs)
         context['project_slug_id'] = self.kwargs['slug']
         context['comments'] = Comment.objects.filter(for_task=self.object)
+        context['developers'] = Project.objects.get(slug_id=self.kwargs['slug']).developers.all()
         return context
 
     def post(self, request, *args, **kwargs):
@@ -242,6 +243,7 @@ class TaskDetailView(DetailView):
         task.performer = UserProfile.objects.get(pk=data['pk'])
         task.save()
         return JsonResponse({'key': 'success'})
+
 
 class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
     """ Task Delete View definition. """

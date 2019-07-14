@@ -48,3 +48,6 @@ db.json
 # Media and compile staticfiles
 media/
 static/
+
+# Test Personal User Data
+users.txt

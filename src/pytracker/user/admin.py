@@ -19,6 +19,7 @@ class UserProfileAdmin(UserAdmin):
         ("General",
          {'fields': (
              'username',
+             'email',
              'password'
              )
          }

@@ -31,26 +31,25 @@
                             <span><b>Delete</b></span>
                         </a>
                         {% if not task.performer %}
-                        {% csrf_token %}
-                        <input
-                            class="btn btn-success get-task-btn left-card-btn"
-                            type="submit"
-                            value="Set Performer"
-                            data-developer-id="{{ user.id }}"
-                            data-task-id="{{ task.id }}"
-                            data-project-slug="{{ project_slug_id }}"
-                            data-url="{{ update_url }}">
+                            {% csrf_token %}
+                                <button
+                                    type="button"
+                                    class="btn btn-success left-card-btn"
+                                    data-toggle="modal"
+                                    data-target="#developersModalCenter">
+                                    <span><b>Set Performer</b></span>
+                                </button>
                         {% endif %}
                     {% elif user.is_developer%}
                         {% if not task.performer %}
                         {% csrf_token %}
                         <input
-                            class="btn btn-success get-task-btn left-card-btn"
+                            class="btn btn-success set-dev-task-btn left-card-btn"
                             type="submit"
                             value="Get"
+                            style="font-weight: bold;"
                             data-developer-id="{{ user.id }}"
                             data-task-id="{{ task.id }}"
-                            data-project-slug="{{ project_slug_id }}"
                             data-url="{{ update_url }}">
                         {% endif %}
                     {% endif %}
@@ -123,6 +122,45 @@
             </div>
         </div>
     </div>
+
+    {% if user.is_admin %}
+        <!-- Modal -->
+    <div
+        class="modal fade"
+        id="developersModalCenter"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="developersodalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="developersModalLongTitle">Available Developers</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group-flush">
+                        {% for developer in developers %}
+                            {% csrf_token %}
+                            <button
+                                class="list-group-item set-dev-task-btn list-group-item-action"
+                                data-developer-id="{{ developer.id }}"
+                                data-task-id="{{ task.id }}">
+                                {{ developer.first_name }}&nbsp;{{ developer.last_name }}
+                            </button>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="modal-footer text-muted">
+                    <span>Choose one developer</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
 <!-- Task Detail Section End -->
 {% else %}
     <div class="row text-center">
