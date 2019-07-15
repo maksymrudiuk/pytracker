@@ -1,7 +1,6 @@
 {% extends "../base.html" %}
 
 {% load static from staticfiles %}
-
 {% block content %}
 <div class="row">
     <div class="col-lg-4">
@@ -21,15 +20,19 @@
         </div>
     </div>
     <div class="col-lg-8">
-        <!-- My Projects Section Start -->
         <div class="row">
             <div class="col-lg-12">
                 {% include "components/additional_nav.html" %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
                 <div class="row section-title">
                     <div class="col-lg-4">
-                        <p>Recently projects</p>
+                        <h3>{{ title }}</h3>
                     </div>
-                    {% if user.is_admin %}
+                    {% if user.is_admin and request.GET.tip == 'projects' %}
                     <div class="col-lg-8">
                         <a
                             href="{% url 'create_project' %}"
@@ -44,7 +47,7 @@
                     <div class="col-lg-12 card-container">
                         {% if not projects and user.is_developer %}
                             The admin has not added you to any project.
-                            You can see avialable <a href="{% url 'project_list' %}">projects</a>.
+                            You can see avialable <a href="{% url 'projects' %}">projects</a>.
                         {% endif %}
                         {% for project in projects %}
                         <div class="card project-view">
@@ -56,7 +59,7 @@
                                 <p class="card-text">{{ project.created_at }}</p>
                                 <p class="card-text">{{ project.description | safe | truncatewords:"50"|linebreaks }}</p>
                                 <a
-                                    href="{% url 'project_detail' slug=project.slug_id %}"
+                                    href="{% url 'project_detail' username=request.user.username slug=project.slug_id %}"
                                     class="btn btn-primary">
                                     View Detail
                                 </a>
@@ -70,18 +73,23 @@
                             <a
                                 class="btn btn-light"
                                 role="button"
-                                href="{% url 'project_list' %}">
+                                href="{% url 'user_home' username=request.user.username %}?tip=projects">
                                 <b>View All My Project</b>
                             </a>
                         </p>
                     </div>
                     {% endif %}
+                    <div class="col-lg-12 justify-content-center">
+                    {% with object_list=projects %}
+                        {% include "components/pagination.html" %}
+                    {% endwith %}
+                    </div>
                 </div>
             </div>
         </div>
         <!-- My Projects Section End -->
         <!-- My Team Section Start -->
-        {% if user.is_admin %}
+        {% if user.is_admin and developers%}
         <div class="row">
             <div class="col-lg-12">
                 <div class="row section-title">

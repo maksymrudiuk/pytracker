@@ -1,9 +1,17 @@
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a class="nav-link active" href="#">Overview</a>
+        <a
+            class="nav-link {% url 'user_home' request.user.username as main %}{% if request.path == main and not request.GET.tip %}active{% endif %}"
+            href="{% url 'user_home' username=request.user.username %}">
+            Overview
+        </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">Projects</a>
+        <a
+            class="nav-link {% url 'user_home' request.user.username as main %}{% if request.path == main and request.GET.tip == 'projects' %}active{% endif %}"
+            href="{% url 'user_home' username=request.user.username %}?tip=projects">
+            Projects
+        </a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="#">Tasks</a>

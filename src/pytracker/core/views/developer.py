@@ -21,12 +21,17 @@ class DevelopersView(TemplateView):
     def get_context_data(self, **kwargs):
 
         developers_in_project = Project.objects.get(slug_id=kwargs['slug']).developers.all()
+        print(developers_in_project)
         developers = UserProfile.objects.filter(position=2)
 
         context = super(DevelopersView, self).get_context_data(**kwargs)
         context['update_url'] = reverse_lazy(
             'add_developer_in_project',
-            kwargs={'slug': kwargs['slug']})
+            kwargs={
+                'username': self.request.user.username,
+                'slug': kwargs['slug']
+            }
+        )
         context['project_slug_id'] = kwargs['slug']
 
         if not developers_in_project:

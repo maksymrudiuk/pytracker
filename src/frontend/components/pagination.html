@@ -1,11 +1,13 @@
 {% if is_paginated %}
+
+{% with tip=request.GET.tip %}
 <nav aria-label="Page navigation">
     <ul class="pagination justify-content-center">
         <li class="page-item">
             <a
                 class="page-link"
                 aria-label="Previous"
-                href="?page1">
+                href="?{% if tip %}tip={{ tip }}&amp;{% endif %}page1">
                 <span> &laquo;</span>
                 <span class="sr-only">Previous</span>
             </a>
@@ -14,7 +16,7 @@
             <li class="page-item {% if object_list.number == p %}active{% endif %}">
                 <a
                     class="page-link"
-                    href="?page={{ p }}">
+                    href="?{% if tip %}tip={{ tip }}&amp;{% endif %}page={{ p }}">
                     {{ p }}
                 </a>
             </li>
@@ -23,11 +25,12 @@
             <a
                 class="page-link"
                 aria-label="Next"
-                href="?page={{ pagination.num_pages }}">
+                href="?{% if tip %}tip={{ tip }}&amp;{% endif %}page={{ paginator.num_pages }}">
                 <span>&raquo;</span>
                 <span class="sr-only">Next</span>
             </a>
         </li>
     </ul>
 </nav>
+{% endwith %}
 {% endif %}

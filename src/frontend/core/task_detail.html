@@ -25,21 +25,25 @@
                     <span class="header-title">General</span>
                     {% if user.is_admin %}
                         <a
-                            href="{% url 'delete_task' slug=project_slug_id pk=task.id %}"
+                            href="{% url 'delete_task' username=request.user.username slug=project_slug_id pk=task.id %}"
                             role="button"
                             class="btn btn-danger left-card-btn">
                             <span><b>Delete</b></span>
                         </a>
-                        {% if not task.performer %}
-                            {% csrf_token %}
-                                <button
-                                    type="button"
-                                    class="btn btn-success left-card-btn"
-                                    data-toggle="modal"
-                                    data-target="#developersModalCenter">
-                                    <span><b>Set Performer</b></span>
-                                </button>
-                        {% endif %}
+                        {% csrf_token %}
+                        <button
+                            type="button"
+                            class="btn btn-success left-card-btn"
+                            data-toggle="modal"
+                            data-target="#developersModalCenter">
+                            <span><b>
+                                {% if not task.performer %}
+                                Set Performer
+                                {% elif task.performer %}
+                                Change Performer
+                                {% endif %}
+                            </b></span>
+                        </button>
                     {% elif user.is_developer%}
                         {% if not task.performer %}
                         {% csrf_token %}
@@ -54,7 +58,7 @@
                         {% endif %}
                     {% endif %}
                     <a
-                        href="{% url 'edit_task' slug=project_slug_id pk=task.id %}"
+                        href="{% url 'edit_task' username=request.user.username slug=project_slug_id pk=task.id %}"
                         role="button"
                         class="btn btn-info left-card-btn">
                         <span><b>Edit</b></span>
@@ -77,7 +81,8 @@
                     <p class="card-text">
                         <b>Performer:</b>&nbsp;
                         {% if task.performer %}
-                            {{ task.performer }}
+                            {{ task.performer.first_name }}
+                            {{ task.performer.last_name }}
                         {% else %}
                             Task is Free
                         {% endif %}
@@ -97,7 +102,7 @@
                 <div class="card-header">
                     <span class="header-title">Comments</span>
                     <a
-                        href="{% url 'add_comment' slug=project_slug_id pk=task.id %}"
+                        href="{% url 'add_comment' username=request.user.username slug=project_slug_id pk=task.id %}"
                         role="button"
                         class="btn btn-success left-card-btn">
                         <span><b>Add</b></span>
@@ -130,7 +135,7 @@
         id="developersModalCenter"
         tabindex="-1"
         role="dialog"
-        aria-labelledby="developersodalCenterTitle"
+        aria-labelledby="developersModalCenterTitle"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">

@@ -6,7 +6,7 @@
 <!-- My Projects Section Start -->
 <div class="row text-center">
     <div class="col-lg-12">
-        <h1>{{ project.name }}&nbsp;Overview</h1>
+        <h1>{{ object.name }}&nbsp;Overview</h1>
     </div>
 </div>
 <div class="row">
@@ -17,8 +17,8 @@
                 General
             </div>
             <div class="card-body">
-                <h5 class="card-title">{{ project.name }}</h5>
-                <p class="card-text">{{ project.description | safe }}</p>
+                <h5 class="card-title">{{ object.name }}</h5>
+                <p class="card-text">{{ object.description | safe }}</p>
             </div>
         </div>
     </div>
@@ -32,7 +32,7 @@
                 <span class="header-title">Tasks</span>
                 {% if user.is_admin %}
                 <a
-                    href="{% url 'create_task' slug=project.slug_id %}"
+                    href="{% url 'create_task' username=request.user.username slug=object.slug_id %}"
                     role="button"
                     class="btn btn-success left-card-btn">
                     <span><b>Add</b></span>
@@ -49,14 +49,14 @@
                         <span>
                         {% if user.is_admin %}
                         <a
-                            href="{% url 'delete_task' slug=project.slug_id pk=task.id %}"
+                            href="{% url 'delete_task' username=request.user.username slug=object.slug_id pk=task.id %}"
                             role="button"
                             class="btn btn-danger left-card-btn">
                             <span><b>Delete</b></span>
                         </a>
                         {% endif %}
                         <a
-                            href="{% url 'edit_task' slug=project.slug_id pk=task.id %}"
+                            href="{% url 'edit_task' username=request.user.username slug=object.slug_id pk=task.id %}"
                             role="button"
                             class="btn btn-info left-card-btn">
                             <span><b>Edit</b></span>
@@ -66,7 +66,7 @@
                         <h5 class="card-title">{{ task.get_priority_display }}</h5>
                         <p class="card-text">{{ task.description | safe | truncatewords:"50"|linebreaks }}</p>
                             <a
-                            href="{% url 'detail_task' slug=project.slug_id pk=task.id %}"
+                            href="{% url 'detail_task' username=request.user.username slug=object.slug_id pk=task.id %}"
                             class="btn btn-primary">
                             View Detail
                         </a>
@@ -91,14 +91,14 @@
             <div class="card-header">
                 <span class="header-title">Team</span>
                 <a
-                    href="{% url 'add_developer_in_project' slug=project.slug_id %}"
+                    href="{% url 'add_developer_in_project' username=request.user.username slug=object.slug_id %}"
                     role="button"
                     class="btn btn-success left-card-btn">
                     <span><b>Add</b></span>
                 </a>
             </div>
             <div class="card-body">
-                {% if project.developers.all %}
+                {% if object.developers.all %}
                 <table class="table">
                     <thead>
                         <tr>
@@ -109,7 +109,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for developer in project.developers.all %}
+                        {% for developer in object.developers.all %}
                             <tr>
                                 <th scope="row">{{ forloop.counter }}</th>
                                 <td>{{ developer.first_name }}</td>

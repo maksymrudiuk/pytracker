@@ -11,6 +11,7 @@ class Project(models.Model):
 
         verbose_name = 'Project'
         verbose_name_plural = 'Projects'
+        ordering = ['-created_at']
 
     slug_id = models.SlugField(
         "Unique string id",
@@ -65,6 +66,7 @@ class DeveloperInProject(models.Model):
 
         verbose_name = 'Developer In Project'
         verbose_name_plural = 'Developer In Projects'
+        ordering = ['-id']
 
     developer = models.ForeignKey(
         'user.UserProfile',

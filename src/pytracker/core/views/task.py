@@ -54,7 +54,11 @@ class TaskCreateView(CreateView):  # pylint: disable=too-many-ancestors
             obj.save()
             return HttpResponseRedirect(reverse_lazy(
                 'project_detail',
-                kwargs={'slug': self.kwargs['slug']}))
+                kwargs={
+                    'username': self.request.user.username,
+                    'slug': self.kwargs['slug']
+                }
+            ))
 
         return render(request, 'core/form.html', {'form': form})
 
@@ -71,7 +75,13 @@ class TaskUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
         return super(TaskUpdateView, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse_lazy('project_detail', kwargs={'slug': self.kwargs['slug']})
+        return reverse_lazy(
+            'project_detail',
+            kwargs={
+                'username': self.request.user.username,
+                'slug': self.kwargs['slug']
+            }
+        )
 
     def post(self, request, *args, **kwargs):
 
@@ -79,7 +89,11 @@ class TaskUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
             messages.warning(request, 'Task editing is canceled')
             return HttpResponseRedirect(reverse_lazy(
                 'project_detail',
-                kwargs={'slug': self.kwargs['slug']}))
+                kwargs={
+                    'username': self.request.user.username,
+                    'slug': self.kwargs['slug']
+                }
+            ))
         else:
             messages.success(request, 'Task successful saved')
             return super(TaskUpdateView, self).post(
@@ -147,14 +161,20 @@ class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
         return context
 
     def get_success_url(self):
-        return reverse_lazy('project_detail', kwargs={'slug': self.kwargs['slug']})
+        return reverse_lazy('project_detail', kwargs={
+            'username': self.request.user.username,
+            'slug': self.kwargs['slug']})
 
     def post(self, request, *args, **kwargs):
         if request.POST.get('cancel_button'):
             messages.warning(request, 'Task deleting is canceled')
             return HttpResponseRedirect(reverse_lazy(
                 'project_detail',
-                kwargs={'slug': self.kwargs['slug']}))
+                kwargs={
+                    'username': self.request.user.username,
+                    'slug': self.kwargs['slug']
+                }
+            ))
         else:
             messages.success(request, 'Task successful delete')
             return super(TaskDeleteView, self).post(

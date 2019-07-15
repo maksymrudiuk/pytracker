@@ -103,8 +103,15 @@ class TaskUpdateForm(forms.ModelForm):
         self.helper.form_method = 'post'
         self.helper.label_class = 'col-md-4 control-label form-row'
         self.helper.field_class = 'col-md-6 form-row'
-        self.helper.add_input(Submit('save_btn', 'Save', css_class='btn btn-success crispy-btn'))
-        self.helper.add_input(Submit('cancel_btn', 'Cancel', css_class='btn btn-danger crispy-btn'))
+        self.helper.add_input(Submit(
+            'save_btn',
+            'Save',
+            css_class='btn btn-success crispy-btn'))
+        self.helper.add_input(Submit(
+            'cancel_btn',
+            'Cancel',
+            css_class='btn btn-danger crispy-btn',
+            formnovalidate='formnovalidate'))
 
     def save(self, commit=True):
         task = super(TaskUpdateForm, self).save(commit=False)

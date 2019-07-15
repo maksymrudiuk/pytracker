@@ -42,6 +42,7 @@ class CommentCreateView(CreateView):  # pylint: disable=too-many-ancestors
             return HttpResponseRedirect(reverse_lazy(
                 'detail_task',
                 kwargs={
+                    'username': request.user.username,
                     'slug': kwargs['slug'],
                     'pk': kwargs['pk']
                 }

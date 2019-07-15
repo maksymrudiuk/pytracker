@@ -1,6 +1,7 @@
-from django.urls import path, re_path
+from django.urls import path, include, re_path
 from .views import (
-    HomeView,
+    home,
+    UserHomeView,
     ProjectListView,
     ProjectCreateView,
     ProjectDetailView,
@@ -13,45 +14,50 @@ from .views import (
 )
 
 urlpatterns = [
-    re_path(
-        r'^$',
-        HomeView.as_view(),
-        name="home"),
     path(
-        'project/list/',
-        ProjectListView.as_view(),
-        name='project_list'
+        '',
+        home,
+        name='home'
     ),
     path(
-        'project/add/',
+        'users/<username>/',
+        UserHomeView.as_view(),
+        name="user_home"),
+    path(
+        'projects/',
+        ProjectListView.as_view(),
+        name='projects'
+    ),
+    path(
+        'projects/add/',
         ProjectCreateView.as_view(),
         name='create_project'),
     path(
-        'project/<slug:slug>/',
+        'users/<username>/<slug:slug>/',
         ProjectDetailView.as_view(),
         name='project_detail'),
     path(
-        'project/<slug:slug>/task/add/',
+        'users/<username>/<slug:slug>/tasks/add/',
         TaskCreateView.as_view(),
         name='create_task'),
     path(
-        'project/<slug:slug>/task/<int:pk>/detail/',
+        'users/<username>/<slug:slug>/tasks/<int:pk>/detail/',
         TaskDetailView.as_view(),
         name='detail_task'),
     path(
-        'project/<slug:slug>/task/<int:pk>/delete/',
+        'users/<username>/<slug:slug>/tasks/<int:pk>/delete/',
         TaskDeleteView.as_view(),
         name='delete_task'),
     path(
-        'project/<slug:slug>/task/<int:pk>/edit/',
+        'users/<username>/<slug:slug>/tasks/<int:pk>/edit/',
         TaskUpdateView.as_view(),
         name='edit_task'),
     path(
-        'project/<slug:slug>/task/<int:pk>/comment/add/',
+        'users/<username>/<slug:slug>/tasks/<int:pk>/comments/add/',
         CommentCreateView.as_view(),
         name='add_comment'),
     path(
-        'project/<slug:slug>/add/developer/',
+        'users/<username>/<slug:slug>/add/developers/',
         DevelopersView.as_view(),
-        name='add_developer_in_project')
+        name='add_developer_in_project'),
 ]

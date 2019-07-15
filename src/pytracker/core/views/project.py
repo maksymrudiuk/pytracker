@@ -4,7 +4,9 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import (
+    CreateView,
+    UpdateView)
 from django.views.generic.detail import DetailView
 from django.template.defaultfilters import slugify
 from django.utils.decorators import method_decorator
@@ -13,14 +15,14 @@ from django.contrib.auth.decorators import login_required
 from ..models import (
     Project,
     Task)
-from ..forms import ProjectCreateForm
+from ..forms import ProjectCreateUpdateForm
 from ..utils import paginate
 
 
 class ProjectListView(ListView):  # pylint: disable=too-many-ancestors
     """ ProjectList View definition. """
     model = Project
-    template_name = "core/project_list.html"
+    template_name = "core/projects.html"
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -29,16 +31,13 @@ class ProjectListView(ListView):  # pylint: disable=too-many-ancestors
     def get_queryset(self):
 
         if self.request.user.is_authenticated:
-            if self.request.user.is_admin:
-                queryset = Project.objects.filter(owner=self.request.user)
-            elif self.request.user.is_developer:
-                queryset = Project.objects.filter(developers=self.request.user)
+            queryset = Project.objects.all()
         else:
             queryset = Project.objects.none()
 
         return queryset
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs):  # pylint: disable=arguments-differ
         context = super(ProjectListView, self).get_context_data(**kwargs)
         context = paginate(
             queryset=context['object_list'],
@@ -46,7 +45,6 @@ class ProjectListView(ListView):  # pylint: disable=too-many-ancestors
             request=self.request,
             context=context,
             queryset_name='projects')
-        context['projects_page'] = 'active'
         return context
 
 
@@ -55,6 +53,7 @@ class ProjectDetailView(DetailView):  # pylint: disable=too-many-ancestors
 
     slug_field = 'slug_id'
     slug_url_kwarg = 'slug'
+    template_name = 'core/project_detail.html'
 
 
     @method_decorator(login_required)
@@ -70,7 +69,6 @@ class ProjectDetailView(DetailView):  # pylint: disable=too-many-ancestors
                 queryset = Project.objects.filter(developers=self.request.user)
         else:
             queryset = Project.objects.none()
-
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -91,7 +89,7 @@ class ProjectCreateView(CreateView):  # pylint: disable=too-many-ancestors
     def get(self, request, *args, **kwargs):
 
         context = {
-            'form': ProjectCreateForm,
+            'form': ProjectCreateUpdateForm,
             'title': 'Create Project'
         }
 
@@ -99,7 +97,17 @@ class ProjectCreateView(CreateView):  # pylint: disable=too-many-ancestors
 
     def post(self, request, *args, **kwargs):
 
-        form = ProjectCreateForm(self.request.POST)
+        form = ProjectCreateUpdateForm(self.request.POST)
+
+        if request.POST.get('cancel_btn'):
+            messages.warning(request, 'Project adding is canceled')
+            url = reverse_lazy(
+                'user_home',
+                kwargs={
+                    'username': request.user.username,
+                }
+            )
+            return HttpResponseRedirect("%s?tip=projects" % url)
 
         if form.is_valid:
 
@@ -116,6 +124,50 @@ class ProjectCreateView(CreateView):  # pylint: disable=too-many-ancestors
             messages.success(request, 'Project successful created')
             return HttpResponseRedirect(reverse_lazy(
                 'project_detail',
-                kwargs={'slug': obj.slug_id}))
+                kwargs={
+                    'username': request.user.username,
+                    'slug': obj.slug_id
+                }
+            ))
 
         return render(request, 'core/form.html', {'form': form})
+
+class ProjectUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
+    """ ProjectUpdate View definition. """
+
+    model = Task
+    template_name = "core/form.html"
+    form_class = ProjectCreateUpdateForm
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(ProjectUpdateView, self).dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy(
+            'project_detail',
+            kwargs={
+                'username': self.request.user.username,
+                'slug': self.kwargs['slug']
+            }
+        )
+
+    def post(self, request, *args, **kwargs):
+
+        if request.POST.get('cancel_btn'):
+            messages.warning(request, 'Project editing is canceled')
+            return HttpResponseRedirect(reverse_lazy(
+                'project_detail',
+                kwargs={
+                    'username': self.request.user.username,
+                    'slug': self.kwargs['slug']
+                }
+            ))
+        else:
+            messages.success(request, 'Project successful saved')
+            return super(ProjectUpdateView, self).post(
+                request,
+                *args,
+                **kwargs
+            )
+

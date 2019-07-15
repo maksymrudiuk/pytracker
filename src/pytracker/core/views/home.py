@@ -3,43 +3,57 @@ from django.shortcuts import render
 from django.views import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.urls import reverse_lazy
 # Local modules
 from ..models import Project
-# from ..utils import paginate
+from ..utils import slice_queryset, paginate
 
 
 # Create your views here.
-class HomeView(View):
+class UserHomeView(View):
     """ Home View definition. """
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        return super(HomeView, self).dispatch(request, *args, **kwargs)
+        return super(UserHomeView, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """ Return context data into home page """
 
         context = {}
+        tip = request.GET.get('tip')
+        user = self.request.user
+        projects = Project.objects.all()
 
-        if self.request.user.is_authenticated:
+        if user.is_authenticated:
 
-            if self.request.user.is_admin:
-                user = self.request.user
-                projects_queryset = Project.objects.filter(owner=user).order_by('created_at')
-                context['developers'] = self.get_developers_list(projects_queryset)
-            elif self.request.user.is_developer:
-                projects_queryset = Project.objects.filter(
-                    developers=self.request.user).order_by('created_at')
+            if tip is None:
+                if user.is_admin:
+                    projects = projects.filter(owner=user).order_by('-created_at')
+                    context['developers'] = self.get_developers_list(projects)
+                elif user.is_developer:
+                    projects = projects.filter(developers=user).order_by('-created_at')
 
-            if len(projects_queryset) > 4:
-                context['projects'] = projects_queryset[:4]
-                context['has_other'] = True
-            else:
-                context['projects'] = projects_queryset
-                context['has_other'] = False
+                context['title'] = 'Recently projects'
+                context = slice_queryset(projects, context, 2, 'projects')
 
-            context['home_page'] = 'active'
+            if tip == 'projects':
 
+                if user.is_admin:
+                    projects = projects.filter(owner=user).order_by('-created_at')
+                elif user.is_developer:
+                    projects = projects.filter(developers=user).order_by('-created_at')
+
+                context['title'] = 'Projects'
+
+                context = paginate(
+                    queryset=projects,
+                    pages=5,
+                    request=request,
+                    context=context,
+                    queryset_name='projects'
+                )
 
             return render(request, 'core/home.html', context=context)
 
@@ -55,3 +69,9 @@ class HomeView(View):
                 developers.add(developer)
 
         return developers
+
+@login_required
+def home(request):
+    return HttpResponseRedirect(reverse_lazy(
+        'user_home',
+        args=[request.user.username]))

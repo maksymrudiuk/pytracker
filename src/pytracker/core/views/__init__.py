@@ -1,4 +1,4 @@
-from .home import HomeView
+from .home import UserHomeView, home
 from .project import (
     ProjectListView,
     ProjectDetailView,

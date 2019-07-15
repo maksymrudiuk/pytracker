@@ -35,3 +35,19 @@ def paginate(queryset, pages, request, context, queryset_name):
     context['paginator'] = paginator
 
     return context
+
+def slice_queryset(queryset, context, size, queryset_name):
+
+    if isinstance(queryset_name, str):
+
+        if len(queryset) > size:
+            context[queryset_name] = queryset[:size]
+            context['has_other'] = True
+        else:
+            context[queryset_name] = queryset
+            context['has_other'] = False
+
+        return context
+    else:
+        raise TypeError('Varialable queryset_name must be a string')
+

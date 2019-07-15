@@ -1,4 +1,4 @@
-from .project import ProjectCreateForm
+from .project import ProjectCreateUpdateForm
 from .task import (
     TaskCreateForm,
     TaskUpdateForm
