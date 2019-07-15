@@ -3,133 +3,107 @@
 {% load static from staticfiles %}
 
 {% block content %}
-{% if user.is_authenticated %}
-    <div class="row">
-        <div class="col-lg-4">
-            <div class="user-data-section">
-                <div class="user-photo text-center">
-                    <img
-                        class="img-fluid img-thumbnail"
-                        src="{% static 'img/user_image.png' %}"
-                        alt="User Image"
-                        width="200"
-                        height="200">
-                </div>
-                <div class="text-center personal-info">
-                    <p>{{ user.first_name }}</p>
-                    <p>{{ user.last_name }}</p>
-                </div>
+<div class="row">
+    <div class="col-lg-4">
+        <div class="user-data-section">
+            <div class="user-photo text-center">
+                <img
+                    class="img-fluid img-thumbnail"
+                    src="{% static 'img/user_image.png' %}"
+                    alt="User Image"
+                    width="200"
+                    height="200">
             </div>
-        </div>
-        <div class="col-lg-8">
-            <!-- My Projects Section Start -->
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="row section-title">
-                        <div class="col-lg-4">
-                            <h3>Projects</h3>
-                        </div>
-                        {% if user.is_admin %}
-                        <div class="col-lg-8">
-                            <a
-                                href="{% url 'create_project' %}"
-                                role="button"
-                                class="btn btn-success left-card-btn">
-                                <span><b>Add New</b></span>
-                            </a>
-                        </div>
-                        {% endif %}
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <div class="col-lg-12 card-container">
-                            {% if not projects and user.is_developer %}
-                                The admin has not added you to any project.
-                                You can see avialable <a href="{% url 'project_list' %}">projects</a>.
-                            {% endif %}
-                            {% for project in projects %}
-                            <div class="card project-view">
-                                <div class="card-header">
-                                    {{ project.slug_id }}
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ project.name }}</h5>
-                                    <p class="card-text">{{ project.description | safe }}</p>
-                                    <a
-                                        href="{% url 'project_detail' slug=project.slug_id %}"
-                                        class="btn btn-primary">
-                                        View Detail
-                                    </a>
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
+            <div class="text-center personal-info">
+                <p><b>{{ user.first_name }}&nbsp;{{ user.last_name }}</b></p>
+                <p>{{ user.get_position_display }}</p>
             </div>
-            <!-- My Projects Section End -->
-            <!-- My Team Section Start -->
-            {% if user.is_admin %}
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="row section-title">
-                        <div class="col-lg-4">
-                            <h3>Team</h3>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">First</th>
-                                    <th scope="col">Last</th>
-                                    <th scope="col">Username</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for developer in developers %}
-                                    <tr>
-                                        <th scope="row">{{ forloop.counter }}</th>
-                                        <td>{{ developer.first_name }}</td>
-                                        <td>{{ developer.last_name }}</td>
-                                        <td>{{ developer.username }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
-            <!-- My Team Section End -->
         </div>
     </div>
-{% else %}
-<div class="row text-center">
-    <div class="col-lg-12">
-        <h1>You are not logged in</h1>
+    <div class="col-lg-8">
+        <!-- My Projects Section Start -->
         <div class="row">
-            <div class="col-lg-2 offset-lg-4">
-                <a
-                    class="btn btn-outline-info"
-                    role="button"
-                    href="{% url 'login' %}">
-                    Login
-                </a>
-            </div>
-            <div class="col-lg-2">
-                <a
-                    class="btn btn-outline-success"
-                    role="button"
-                    href="{% url 'signup' %}">
-                    Sign Up
-                </a>
+            <div class="col-lg-12">
+                <div class="row section-title">
+                    <div class="col-lg-4">
+                        <h3>Projects</h3>
+                    </div>
+                    {% if user.is_admin %}
+                    <div class="col-lg-8">
+                        <a
+                            href="{% url 'create_project' %}"
+                            role="button"
+                            class="btn btn-success left-card-btn">
+                            <span><b>Add New</b></span>
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-lg-12 card-container">
+                        {% if not projects and user.is_developer %}
+                            The admin has not added you to any project.
+                            You can see avialable <a href="{% url 'project_list' %}">projects</a>.
+                        {% endif %}
+                        {% for project in projects %}
+                        <div class="card project-view">
+                            <div class="card-header">
+                                {{ project.slug_id }}
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ project.name }}</h5>
+                                <p class="card-text">{{ project.description | safe }}</p>
+                                <a
+                                    href="{% url 'project_detail' slug=project.slug_id %}"
+                                    class="btn btn-primary">
+                                    View Detail
+                                </a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
+        <!-- My Projects Section End -->
+        <!-- My Team Section Start -->
+        {% if user.is_admin %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="row section-title">
+                    <div class="col-lg-4">
+                        <h3>Team</h3>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">First</th>
+                                <th scope="col">Last</th>
+                                <th scope="col">Username</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for developer in developers %}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ developer.first_name }}</td>
+                                    <td>{{ developer.last_name }}</td>
+                                    <td>{{ developer.username }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- My Team Section End -->
     </div>
 </div>
-{% endif %}
 {% endblock content %}

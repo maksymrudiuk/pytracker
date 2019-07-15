@@ -3,7 +3,7 @@ from .models import (Project,
                      Task,
                      Comment,
                      DeveloperInProject,
-                     TimeLogging)
+                     TimeJournal)
 
 
 class CommentInline(admin.TabularInline):
@@ -81,4 +81,4 @@ admin.site.register(Project, ProjectAdmin)
 admin.site.register(Task, TaskAdmin)
 admin.site.register(Comment)
 admin.site.register(DeveloperInProject)
-admin.site.register(TimeLogging)
+admin.site.register(TimeJournal)
