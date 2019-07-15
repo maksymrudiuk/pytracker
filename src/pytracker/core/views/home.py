@@ -5,7 +5,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 # Local modules
 from ..models import Project
-# from .utils import paginate
+# from ..utils import paginate
 
 
 # Create your views here.
@@ -25,17 +25,25 @@ class HomeView(View):
 
             if self.request.user.is_admin:
                 user = self.request.user
-                context['projects'] = Project.objects.filter(owner=user)
-                context['developers'] = self.get_developers_list(context['projects'])
+                projects_queryset = Project.objects.filter(owner=user).order_by('created_at')
+                context['developers'] = self.get_developers_list(projects_queryset)
             elif self.request.user.is_developer:
-                context['projects'] = Project.objects.filter(developers=self.request.user)
+                projects_queryset = Project.objects.filter(
+                    developers=self.request.user).order_by('created_at')
+
+            if len(projects_queryset) > 4:
+                context['projects'] = projects_queryset[:4]
+                context['has_other'] = True
+            else:
+                context['projects'] = projects_queryset
+                context['has_other'] = False
 
             context['home_page'] = 'active'
 
 
-            return render(request, 'core/overview.html', context=context)
+            return render(request, 'core/home.html', context=context)
 
-        return render(request, 'core/overview.html', context=None)
+        return render(request, 'core/home.html', context=None)
 
     @staticmethod
     def get_developers_list(projects):

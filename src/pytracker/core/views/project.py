@@ -26,11 +26,23 @@ class ProjectListView(ListView):  # pylint: disable=too-many-ancestors
     def dispatch(self, request, *args, **kwargs):
         return super(ProjectListView, self).dispatch(request, *args, **kwargs)
 
+    def get_queryset(self):
+
+        if self.request.user.is_authenticated:
+            if self.request.user.is_admin:
+                queryset = Project.objects.filter(owner=self.request.user)
+            elif self.request.user.is_developer:
+                queryset = Project.objects.filter(developers=self.request.user)
+        else:
+            queryset = Project.objects.none()
+
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super(ProjectListView, self).get_context_data(**kwargs)
         context = paginate(
             queryset=context['object_list'],
-            pages=5,
+            pages=3,
             request=self.request,
             context=context,
             queryset_name='projects')
