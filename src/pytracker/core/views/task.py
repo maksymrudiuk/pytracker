@@ -10,8 +10,8 @@ from django.views.generic.edit import (
     UpdateView,
     DeleteView)
 from django.views.generic.detail import DetailView
-# from django.utils.decorators import method_decorator
-# from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 # Local modules
 from user.models import UserProfile
 from ..models import (
@@ -20,8 +20,7 @@ from ..models import (
     Comment)
 from ..forms import (
     TaskCreateForm,
-    TaskUpdateForm,
-    CommentAddForm)
+    TaskUpdateForm)
 # from ..utils import paginate
 
 
@@ -29,6 +28,10 @@ class TaskCreateView(CreateView):  # pylint: disable=too-many-ancestors
     """ Task Create View definition. """
 
     model = Task
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(TaskCreateView, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
 
@@ -63,6 +66,9 @@ class TaskUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
     template_name = "core/form.html"
     form_class = TaskUpdateForm
 
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(TaskUpdateView, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse_lazy('project_detail', kwargs={'slug': self.kwargs['slug']})
@@ -88,6 +94,10 @@ class TaskDetailView(DetailView):  # pylint: disable=too-many-ancestors
 
     model = Task
     template_name = "core/task_detail.html"
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(TaskDetailView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
@@ -122,6 +132,10 @@ class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
     model = Task
     template_name = "core/confirm_delete.html"
     context_object_name = 'context'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(TaskDeleteView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(TaskDeleteView, self).get_context_data(**kwargs)

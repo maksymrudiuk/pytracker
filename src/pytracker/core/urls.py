@@ -2,7 +2,7 @@ from django.urls import path, re_path
 from .views import (
     HomeView,
     ProjectListView,
-    ProjectsCreateView,
+    ProjectCreateView,
     ProjectDetailView,
     TaskCreateView,
     TaskUpdateView,
@@ -24,7 +24,7 @@ urlpatterns = [
     ),
     path(
         'project/add/',
-        ProjectsCreateView.as_view(),
+        ProjectCreateView.as_view(),
         name='create_project'),
     path(
         'project/<slug:slug>/',

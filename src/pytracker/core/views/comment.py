@@ -3,8 +3,8 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.views.generic.edit import CreateView
-# from django.utils.decorators import method_decorator
-# from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 # Local modules
 from ..models import (
     Task,
@@ -17,6 +17,10 @@ class CommentCreateView(CreateView):  # pylint: disable=too-many-ancestors
     """ Comment View definition. """
 
     model = Comment
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(CommentCreateView, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
 

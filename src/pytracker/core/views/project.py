@@ -7,8 +7,8 @@ from django.views.generic import ListView
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.template.defaultfilters import slugify
-# from django.utils.decorators import method_decorator
-# from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 # Local modules
 from ..models import (
     Project,
@@ -21,6 +21,10 @@ class ProjectListView(ListView):  # pylint: disable=too-many-ancestors
     """ ProjectList View definition. """
     model = Project
     template_name = "core/project_list.html"
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(ProjectListView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(ProjectListView, self).get_context_data(**kwargs)
@@ -40,6 +44,11 @@ class ProjectDetailView(DetailView):  # pylint: disable=too-many-ancestors
     slug_field = 'slug_id'
     slug_url_kwarg = 'slug'
 
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(ProjectDetailView, self).dispatch(request, *args, **kwargs)
+
     def get_queryset(self):
 
         if self.request.user.is_authenticated:
@@ -58,10 +67,14 @@ class ProjectDetailView(DetailView):  # pylint: disable=too-many-ancestors
         return context
 
 
-class ProjectsCreateView(CreateView):  # pylint: disable=too-many-ancestors
+class ProjectCreateView(CreateView):  # pylint: disable=too-many-ancestors
     """ ProjectsCreate View definition. """
 
     model = Project
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(ProjectCreateView, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
 

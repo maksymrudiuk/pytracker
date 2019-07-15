@@ -2,7 +2,7 @@ from .home import HomeView
 from .project import (
     ProjectListView,
     ProjectDetailView,
-    ProjectsCreateView,
+    ProjectCreateView,
 )
 from .task import (
     TaskDetailView,
