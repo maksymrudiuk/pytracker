@@ -1,0 +1,25 @@
+    <b>{{ title }}: </b>
+        {% if obj.topic %}
+            <p><b>Topic</b>: {{ obj.topic }}</p>
+        {% endif %}
+        {% if obj.priority %}
+            <p><b>Priority</b>: {{ obj.priority }}</p>
+        {% endif %}
+        {% if obj.task_type %}
+            <p><b>Type</b>: {{ obj.task_type }}</p>
+        {% endif %}
+        {% if obj.performer %}
+            <p><b>Performer</b>: {{ obj.performer }}</p>
+        {% endif %}
+        {% if obj.start_date %}
+            <p><b>Start Date</b>: {{ obj.start_date }}</p>
+        {% endif %}
+        {% if obj.end_date %}
+            <p><b>End Date</b>: {{ obj.end_date }}</p>
+        {% endif %}
+        {% if obj.estimated_time %}
+            <p><b>Estimated_time</b>: {{ obj.estimated_time }}</p>
+        {% endif %}
+        {% if obj.description %}
+            <p><b>Description</b>: {{ obj.description | safe }}</p>
+        {% endif %}

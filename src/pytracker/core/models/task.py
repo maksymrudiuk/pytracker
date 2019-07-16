@@ -52,7 +52,7 @@ class Task(models.Model):
         blank=False
     )
 
-    estimated_time = models.SmallIntegerField()
+    estimated_time = models.DecimalField(max_digits=5, decimal_places=2)
 
     creator = models.ForeignKey(
         'user.UserProfile',

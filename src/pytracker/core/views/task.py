@@ -21,7 +21,7 @@ from ..models import (
 from ..forms import (
     TaskCreateForm,
     TaskUpdateForm)
-# from ..utils import paginate
+from ..tasks import task_update_notification
 
 
 class TaskCreateView(CreateView):  # pylint: disable=too-many-ancestors
@@ -138,7 +138,6 @@ class TaskDetailView(DetailView):  # pylint: disable=too-many-ancestors
 
     def post(self, request, *args, **kwargs):
         data = request.POST
-        print("POST")
 
         task = Task.objects.get(pk=data['task_id'])
         task.performer = Developer.objects.get(pk=data['pk'])

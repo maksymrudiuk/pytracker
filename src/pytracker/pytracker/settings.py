@@ -140,3 +140,7 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
+
+# Test Email Settings
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'noreply-admin@site.mail'
