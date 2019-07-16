@@ -13,13 +13,14 @@
         <div class="alert alert-info" id="ajax-progress-indicator">
             <span>Adding ...</span>
         </div>
-        <div class="alert alert-danger" id="add-error">
+        <div class="alert alert-danger" id="ajax-error">
             <span>Adding Error!</span>
         </div>
     </div>
 </div>
 <div class="row">
     <div class="col-lg-12">
+        {% if developers %}
         <table class="table">
             <thead>
                 <tr>
@@ -42,13 +43,25 @@
                                 type="submit"
                                 value="Add"
                                 data-developer-id="{{ developer.id }}"
-                                data-project-slug="{{ project_slug_id }}"
+                                data-project-slug="{{ view.kwargs.slug }}"
                                 data-url="{{ update_url }}">
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <div class="text-center">
+            <h3>You add all available developers or developers doesn`t exist</h3>
+        </div>
+        {% endif %}
+        <div class="text-center">
+            <a
+                class="btn btn-primary btn-lg"
+                href="{% url 'project_detail' request.user.username view.kwargs.slug %}"
+                role="button">Done
+            </a>
+        </div>
     </div>
 </div>
 {% endblock content %}

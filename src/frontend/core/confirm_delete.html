@@ -5,7 +5,9 @@
 {% block content %}
 <div class="row text-center">
     <div class="col-lg-12">
-        <form action="{% url context_url username=request.user.username slug=context_project_slug_id  pk=context_task_id %}" method="post">
+        <form
+            action="{% if not view.kwargs.pk %}{% url context_url request.user.username view.kwargs.slug %}{% else %}{% url context_url request.user.username view.kwargs.slug view.kwargs.pk %}{% endif %}"
+            method="post">
                 {% csrf_token %}
                 <h3>{{ question }} '{{ context }}'</h3>
                 <input type="submit" value="Confirm", name="confirm_delete_button", class='btn btn-danger'>
@@ -15,3 +17,6 @@
     </div>
 </div>
 {% endblock content %}
+{% comment %}
+{% url context_url username=request.user.username slug=context_project_slug_id pk=context_task_id %}
+{% endcomment %}

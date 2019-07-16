@@ -5,12 +5,15 @@ from .views import (
     ProjectListView,
     ProjectCreateView,
     ProjectDetailView,
+    ProjectUpdateView,
+    ProjectDeleteView,
     TaskCreateView,
     TaskUpdateView,
     TaskDetailView,
     TaskDeleteView,
     CommentCreateView,
     DevelopersView,
+    DevelopersAjaxDeleteView
 )
 
 urlpatterns = [
@@ -37,6 +40,14 @@ urlpatterns = [
         ProjectDetailView.as_view(),
         name='project_detail'),
     path(
+        'users/<username>/<slug:slug>/edit/',
+        ProjectUpdateView.as_view(),
+        name='project_edit'),
+    path(
+        'users/<username>/<slug:slug>/delete/',
+        ProjectDeleteView.as_view(),
+        name='project_delete'),
+    path(
         'users/<username>/<slug:slug>/tasks/add/',
         TaskCreateView.as_view(),
         name='create_task'),
@@ -60,4 +71,8 @@ urlpatterns = [
         'users/<username>/<slug:slug>/add/developers/',
         DevelopersView.as_view(),
         name='add_developer_in_project'),
+    path(
+        'users/<username>/<slug:slug>/delete/developers/<int:pk>',
+        DevelopersAjaxDeleteView.as_view(),
+        name='delete_developer_from_project'),
 ]

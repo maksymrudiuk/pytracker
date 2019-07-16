@@ -14,7 +14,21 @@
 
         <div class="card project-view">
             <div class="card-header">
-                General
+                <span class="header-title">General</span>
+                {% if user.is_admin %}
+                <a
+                    href="{% url 'project_delete' username=request.user.username slug=object.slug_id %}"
+                    role="button"
+                    class="btn btn-danger left-card-btn">
+                    <span><b>Delete</b></span>
+                </a>
+                <a
+                    href="{% url 'project_edit' username=request.user.username slug=object.slug_id %}"
+                    role="button"
+                    class="btn btn-info left-card-btn">
+                    <span><b>Edit</b></span>
+                </a>
+                {% endif %}
             </div>
             <div class="card-body">
                 <h5 class="card-title">{{ object.name }}</h5>
@@ -98,6 +112,16 @@
                 </a>
             </div>
             <div class="card-body">
+                <div class="row">
+                        <div class="col-lg-4 offset-lg-4">
+                            <div class="alert alert-info" id="ajax-progress-indicator">
+                                <span>Deleting ...</span>
+                            </div>
+                            <div class="alert alert-danger" id="ajax-error">
+                                <span>Delete Error!</span>
+                            </div>
+                    </div>
+                </div>
                 {% if object.developers.all %}
                 <table class="table">
                     <thead>
@@ -106,15 +130,24 @@
                             <th scope="col">First</th>
                             <th scope="col">Last</th>
                             <th scope="col">Username</th>
+                            <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for developer in object.developers.all %}
+                        {% for developer in developers %}
                             <tr>
                                 <th scope="row">{{ forloop.counter }}</th>
-                                <td>{{ developer.first_name }}</td>
-                                <td>{{ developer.last_name }}</td>
-                                <td>{{ developer.username }}</td>
+                                <td>{{ developer.user.first_name }}</td>
+                                <td>{{ developer.user.last_name }}</td>
+                                <td>{{ developer.user.username }}</td>
+                                <td>
+                                    {% csrf_token %}
+                                    <input
+                                        class="btn btn-danger delete-developer-btn"
+                                        type="submit"
+                                        value="Delete"
+                                        data-url="{% url 'delete_developer_from_project' request.user.username view.kwargs.slug developer.id %}">
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>

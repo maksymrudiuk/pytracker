@@ -7,8 +7,12 @@
     <!-- Task Detail Section Start -->
     <div class="row">
         <div class="col-lg-4 offset-lg-4">
-            <div class="alert alert-danger" id="get-error">
+            <div class="alert alert-danger" id="ajax-error">
+                {% if user.is_admin %}
+                <span>Set Error!</span>
+                {% elif user.is_developer%}
                 <span>Get Error!</span>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -52,7 +56,7 @@
                             type="submit"
                             value="Get"
                             style="font-weight: bold;"
-                            data-developer-id="{{ user.id }}"
+                            data-developer-id="{{ developer_id }}"
                             data-task-id="{{ task.id }}"
                             data-url="{{ update_url }}">
                         {% endif %}
@@ -81,8 +85,8 @@
                     <p class="card-text">
                         <b>Performer:</b>&nbsp;
                         {% if task.performer %}
-                            {{ task.performer.first_name }}
-                            {{ task.performer.last_name }}
+                            {{ task.performer.user.first_name }}
+                            {{ task.performer.user.last_name }}
                         {% else %}
                             Task is Free
                         {% endif %}
@@ -153,7 +157,7 @@
                                 class="list-group-item set-dev-task-btn list-group-item-action"
                                 data-developer-id="{{ developer.id }}"
                                 data-task-id="{{ task.id }}">
-                                {{ developer.first_name }}&nbsp;{{ developer.last_name }}
+                                {{ developer.user.first_name }}&nbsp;{{ developer.user.last_name }}
                             </button>
                         {% endfor %}
                     </div>

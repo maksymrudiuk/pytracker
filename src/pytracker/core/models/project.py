@@ -36,7 +36,7 @@ class Project(models.Model):
 
     developers = models.ManyToManyField(
         'user.UserProfile',
-        through='DeveloperInProject')
+        through='Developer')
 
     description = tinymce_models.HTMLField(
         "Desrciption"
@@ -58,17 +58,17 @@ class Project(models.Model):
         return "%s" % self.name
 
 
-class DeveloperInProject(models.Model):
-    """Model definition for DeveloperInProject."""
+class Developer(models.Model):
+    """Model definition for Developer."""
 
     class Meta:
-        """Meta definition for DeveloperInProject."""
+        """Meta definition for Developer."""
 
-        verbose_name = 'Developer In Project'
-        verbose_name_plural = 'Developer In Projects'
+        verbose_name = 'Developer'
+        verbose_name_plural = 'Developers'
         ordering = ['-id']
 
-    developer = models.ForeignKey(
+    user = models.ForeignKey(
         'user.UserProfile',
         null=True,
         on_delete=models.SET_NULL
@@ -81,5 +81,5 @@ class DeveloperInProject(models.Model):
     )
 
     def __str__(self):
-        """Unicode representation of DeveloperInProject."""
-        return "%s - %s" % (self.developer, self.project.name)
+        """Unicode representation of Developer."""
+        return "%s - %s" % (self.user, self.project.name)

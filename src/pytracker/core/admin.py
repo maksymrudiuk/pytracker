@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (Project,
                      Task,
                      Comment,
-                     DeveloperInProject,
+                     Developer,
                      TimeJournal)
 
 
@@ -15,10 +15,10 @@ class CommentInline(admin.TabularInline):
     can_delete = False
     extra = 0
 
-class DeveloperInProjectInline(admin.TabularInline):
+class DevelopersInline(admin.TabularInline):
     """ Config Developers inline display in Project. """
 
-    model = DeveloperInProject
+    model = Developer
     verbose_name = "Developer"
     verbose_name_plural = "Developers"
     can_delete = False
@@ -37,7 +37,7 @@ class ProjectAdmin(admin.ModelAdmin):
     """ Config Projects display. """
 
     inlines = [
-        DeveloperInProjectInline,
+        DevelopersInline,
         TaskInline,
     ]
 
@@ -80,5 +80,5 @@ class TaskAdmin(admin.ModelAdmin):
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Task, TaskAdmin)
 admin.site.register(Comment)
-admin.site.register(DeveloperInProject)
+admin.site.register(Developer)
 admin.site.register(TimeJournal)

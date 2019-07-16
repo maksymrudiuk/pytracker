@@ -13,11 +13,11 @@ from django.views.generic.detail import DetailView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 # Local modules
-from user.models import UserProfile
 from ..models import (
     Project,
     Task,
-    Comment)
+    Comment,
+    Developer)
 from ..forms import (
     TaskCreateForm,
     TaskUpdateForm)
@@ -128,14 +128,20 @@ class TaskDetailView(DetailView):  # pylint: disable=too-many-ancestors
         context = super(TaskDetailView, self).get_context_data(**kwargs)
         context['project_slug_id'] = self.kwargs['slug']
         context['comments'] = Comment.objects.filter(for_task=self.object)
-        context['developers'] = Project.objects.get(slug_id=self.kwargs['slug']).developers.all()
+        project = Project.objects.get(slug_id=self.kwargs['slug'])
+        if self.request.user.is_admin:
+            context['developers'] = Developer.objects.filter(project=project)
+        elif self.request.user.is_developer:
+            context['developer_id'] = Developer.objects.get(user=self.request.user).id
+
         return context
 
     def post(self, request, *args, **kwargs):
         data = request.POST
+        print("POST")
 
         task = Task.objects.get(pk=data['task_id'])
-        task.performer = UserProfile.objects.get(pk=data['pk'])
+        task.performer = Developer.objects.get(pk=data['pk'])
         task.save()
         return JsonResponse({'key': 'success'})
 
@@ -156,8 +162,6 @@ class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
         context['question'] = 'Do you want delete Task'
         context['title'] = 'Delete Task'
         context['context_url'] = 'delete_task'
-        context['context_task_id'] = self.kwargs['pk']
-        context['context_project_slug_id'] = self.kwargs['slug']
         return context
 
     def get_success_url(self):

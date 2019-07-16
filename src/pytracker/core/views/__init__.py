@@ -3,6 +3,8 @@ from .project import (
     ProjectListView,
     ProjectDetailView,
     ProjectCreateView,
+    ProjectUpdateView,
+    ProjectDeleteView
 )
 from .task import (
     TaskDetailView,
@@ -11,4 +13,4 @@ from .task import (
     TaskDeleteView
 )
 from .comment import CommentCreateView
-from .developer import DevelopersView
+from .developer import DevelopersView, DevelopersAjaxDeleteView

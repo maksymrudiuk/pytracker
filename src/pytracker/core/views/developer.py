@@ -1,12 +1,15 @@
 # Django Imports
 from django.urls import reverse_lazy
 from django.http import JsonResponse
+from django.views import View
 from django.views.generic.base import TemplateView
+# from django.views.generic.edit import DeleteView
+from django.views.generic.detail import SingleObjectMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 # Local modules
 from user.models import UserProfile
-from ..models import Project, DeveloperInProject
+from ..models import Project, Developer
 # from ..utils import paginate
 
 
@@ -20,9 +23,8 @@ class DevelopersView(TemplateView):
 
     def get_context_data(self, **kwargs):
 
-        developers_in_project = Project.objects.get(slug_id=kwargs['slug']).developers.all()
-        print(developers_in_project)
-        developers = UserProfile.objects.filter(position=2)
+        developers = Project.objects.get(slug_id=kwargs['slug']).developers.all()
+        users = UserProfile.objects.filter(position=2)
 
         context = super(DevelopersView, self).get_context_data(**kwargs)
         context['update_url'] = reverse_lazy(
@@ -32,12 +34,13 @@ class DevelopersView(TemplateView):
                 'slug': kwargs['slug']
             }
         )
-        context['project_slug_id'] = kwargs['slug']
 
-        if not developers_in_project:
-            context['developers'] = developers
+        # context['project_slug_id'] = kwargs['slug']
+
+        if not developers:
+            context['developers'] = users
         else:
-            context['developers'] = developers.exclude(pk__in=developers_in_project)
+            context['developers'] = users.exclude(pk__in=developers)
 
         return context
 
@@ -45,11 +48,25 @@ class DevelopersView(TemplateView):
         """ POST method processing. """
         data = request.POST
 
-        developer = UserProfile.objects.get(pk=data['pk'])
+        user = UserProfile.objects.get(pk=data['pk'])
         project = Project.objects.get(slug_id=data['slug'])
 
-        obj = DeveloperInProject(
-            developer=developer,
+        obj = Developer(
+            user=user,
             project=project)
         obj.save()
+        return JsonResponse({'key': 'success'})
+
+
+class DevelopersAjaxDeleteView(SingleObjectMixin, View):
+    """ Developers DeleteView definition. Ajax Deleting """
+
+    model = Developer
+    queryset = Developer.objects.all()
+
+    def post(self, *args, **kwargs):
+        """ POST method processing. """
+        self.object = self.get_object()
+        print(self.object)
+        self.object.delete()
         return JsonResponse({'key': 'success'})

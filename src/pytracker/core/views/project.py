@@ -1,12 +1,13 @@
 # Django Imports
 from django.shortcuts import render
 from django.contrib import messages
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView
 from django.views.generic.edit import (
     CreateView,
-    UpdateView)
+    UpdateView,
+    DeleteView)
 from django.views.generic.detail import DetailView
 from django.template.defaultfilters import slugify
 from django.utils.decorators import method_decorator
@@ -14,7 +15,8 @@ from django.contrib.auth.decorators import login_required
 # Local modules
 from ..models import (
     Project,
-    Task)
+    Task,
+    Developer)
 from ..forms import ProjectCreateUpdateForm
 from ..utils import paginate
 
@@ -74,6 +76,7 @@ class ProjectDetailView(DetailView):  # pylint: disable=too-many-ancestors
     def get_context_data(self, **kwargs):
         context = super(ProjectDetailView, self).get_context_data(**kwargs)
         context['tasks'] = Task.objects.filter(project=self.object)
+        context['developers'] = Developer.objects.filter(project=self.object)
         return context
 
 
@@ -135,9 +138,11 @@ class ProjectCreateView(CreateView):  # pylint: disable=too-many-ancestors
 class ProjectUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
     """ ProjectUpdate View definition. """
 
-    model = Task
+    model = Project
     template_name = "core/form.html"
     form_class = ProjectCreateUpdateForm
+    slug_field = 'slug_id'
+    slug_url_kwarg = 'slug'
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -171,3 +176,45 @@ class ProjectUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
                 **kwargs
             )
 
+
+class ProjectDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
+    """ Project Delete View definition. """
+
+    model = Project
+    template_name = "core/confirm_delete.html"
+    context_object_name = 'context'
+    slug_field = 'slug_id'
+    slug_url_kwarg = 'slug'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(ProjectDeleteView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(ProjectDeleteView, self).get_context_data(**kwargs)
+        context['question'] = 'Do you want delete Project'
+        context['title'] = 'Delete Project'
+        context['context_url'] = 'project_delete'
+        return context
+
+    def get_success_url(self):
+        url = reverse_lazy('user_home', kwargs={'username': self.request.user.username})
+        return '%s?tip=projects' % url
+
+    def post(self, request, *args, **kwargs):
+        if request.POST.get('cancel_button'):
+            messages.warning(request, 'Project deleting is canceled')
+            return HttpResponseRedirect(reverse_lazy(
+                'project_detail',
+                kwargs={
+                    'username': self.request.user.username,
+                    'slug': self.kwargs['slug']
+                }
+            ))
+        else:
+            messages.success(request, 'Project successful delete')
+            return super(ProjectDeleteView, self).post(
+                request,
+                *args,
+                **kwargs
+            )
