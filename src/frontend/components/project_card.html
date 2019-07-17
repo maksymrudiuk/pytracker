@@ -1,9 +1,8 @@
 <div class="card project-view">
-    <div class="card-header">
-        {{ project.slug_id }}
+    <div class="card-header header-title">
+        {{ project.name }}
     </div>
     <div class="card-body">
-        <h5 class="card-title">{{ project.name }}</h5>
         <p class="card-text">{{ project.created_at }}</p>
         <p class="card-text">{{ project.description | safe | truncatewords:"50"|linebreaks }}</p>
         {% if view_detail %}

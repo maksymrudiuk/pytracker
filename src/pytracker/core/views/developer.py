@@ -73,6 +73,5 @@ class DevelopersAjaxDeleteView(SingleObjectMixin, View):
     def post(self, *args, **kwargs):
         """ POST method processing. """
         self.object = self.get_object()
-        print(self.object)
         self.object.delete()
         return JsonResponse({'key': 'success'})
