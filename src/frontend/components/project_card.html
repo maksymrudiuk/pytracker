@@ -4,7 +4,7 @@
     </div>
     <div class="card-body">
         <p class="card-text">{{ project.created_at }}</p>
-        <p class="card-text">{{ project.description | safe | truncatewords:"50"|linebreaks }}</p>
+        <p class="card-text">{{ project.description|safe|truncatewords:"50"|linebreaks }}</p>
         {% if view_detail %}
         <a
             href="{% url 'project_detail' username=request.user.username slug=project.slug_id %}"

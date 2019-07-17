@@ -55,12 +55,11 @@
             </div>
             <div class="card-body">
                 {% if tasks %}
-                {% for task in tasks %}
-                {% with control=1 slug=object.slug_id %}
-                    {% include '../components/task_card.html' %}
-                {% endwith %}
-
-                {% endfor %}
+                    {% for task in tasks %}
+                    {% with control=1 slug=object.slug_id %}
+                        {% include '../components/task_card.html' %}
+                    {% endwith %}
+                    {% endfor %}
                 {% else %}
                     {% if user.is_admin %}
                         <h3>You don`t add tasks in this Project</h3>

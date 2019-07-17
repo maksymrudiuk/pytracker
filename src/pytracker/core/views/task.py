@@ -93,7 +93,19 @@ class TaskUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
 
     def post(self, request, *args, **kwargs):
 
-        if request.POST.get('cancel_btn'):
+        self.object = self.get_object()
+
+        if self.object.status == 3:
+            messages.warning(request, 'Task is not editable after completed. You can only delete.')
+            return HttpResponseRedirect(reverse_lazy(
+                'project_detail',
+                kwargs={
+                    'username': self.request.user.username,
+                    'slug': self.kwargs['slug']
+                }
+            ))
+
+        elif request.POST.get('cancel_btn'):
             messages.warning(request, 'Task editing is canceled')
             return HttpResponseRedirect(reverse_lazy(
                 'project_detail',
@@ -151,10 +163,13 @@ class TaskDetailView(DetailView):  # pylint: disable=too-many-ancestors
         data = request.POST
 
         task = Task.objects.get(pk=data['task_id'])
-        task.performer = Developer.objects.get(pk=data['pk'])
-        task.status = 2
-        task.save()
-        return JsonResponse({'key': 'success'})
+        if task.status == 3:
+            return JsonResponse({'key': 'error'})
+        else:
+            task.performer = Developer.objects.get(pk=data['pk'])
+            task.status = 2
+            task.save()
+            return JsonResponse({'key': 'success'})
 
 
 class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors

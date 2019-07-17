@@ -75,6 +75,19 @@
                             <span><b>Edit</b></span>
                         </a>
                     {% endif %}
+                {% else %}
+                    {% if user.is_admin %}
+                    <a
+                        href="{% url 'delete_task' username=request.user.username slug=project_slug_id pk=task.id %}"
+                        role="button"
+                        class="btn btn-danger left-card-btn">
+                        <span><b>Delete</b></span>
+                    </a>
+                    {% endif %}
+                    <span
+                        class="text-muted header-title">
+                        &nbsp;(Task is Completed)
+                    </span>
                 {% endif %}
             </div>
             <div class="card-body">

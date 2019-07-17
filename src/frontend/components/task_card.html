@@ -19,7 +19,8 @@
                     class="btn btn-info left-card-btn">
                     <span><b>Edit</b></span>
                 </a>
-            {% elif task.performer.user == user and user.is_developer %}
+            {% endif %}
+            {% if task.performer.user == user and user.is_developer %}
                 <a
                     href="{% url 'time_journal' username=request.user.username slug=slug pk=task.id %}"
                     role="button"
@@ -28,17 +29,24 @@
                 </a>
             {% endif %}
         {% else %}
+            {% if user.is_admin and control %}
+            <a
+                href="{% url 'delete_task' username=request.user.username slug=slug pk=task.id %}"
+                role="button"
+                class="btn btn-danger left-card-btn">
+                <span><b>Delete</b></span>
+            </a>
+            {% endif %}
             <span
-                class="text-muted"
-                style="float: right">
-                Task is Completed. View Detail for more information
+                class="text-muted">
+                &nbsp;(Task is Completed)
             </span>
         {% endif %}
 
     </div>
     <div class="card-body">
         <h5 class="card-title">{{ task.get_priority_display }}</h5>
-        <p class="card-text">{{ task.description | safe | truncatewords:"50"|linebreaks }}</p>
+        <p class="card-text">{{ task.description|safe|truncatewords:50|linebreaks }}</p>
             <a
             href="{% url 'detail_task' username=request.user.username slug=slug pk=task.id %}"
             class="btn btn-primary">
