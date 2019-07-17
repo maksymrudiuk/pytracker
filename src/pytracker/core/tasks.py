@@ -1,9 +1,8 @@
 from __future__ import absolute_import, unicode_literals
-from celery import shared_task
 from django.core.mail import EmailMultiAlternatives
-from .models import Task
-from django.template.loader import get_template
 from django.template.loader import render_to_string
+from celery import shared_task
+from .models import Task
 
 
 # Create your task here
@@ -15,13 +14,18 @@ def task_update_notification(changes, creator_email):
     topic = Task.objects.get(pk=changes['pk']).topic
 
     recipient_list = [creator_email,]
-    if 'performer' in changes['old'].keys():
-        recipient_list.append(changes['old']['performer'])
+    if changes['old']['performer'] is None:
         recipient_list.append(changes['new']['performer'])
+    elif changes['new']['performer'] is None:
+        recipient_list.append(changes['old']['performer'])
     else:
-        recipient_list.append(Task.objects.get(pk=changes['pk']).performer.user.email)
+        recipient_list.append(changes['new']['performer'])
+        recipient_list.append(changes['old']['performer'])
 
-    body = render_to_string('email/email.html', context={'old': changes['old'], 'new': changes['new'], 'topic':topic})
+    body = render_to_string('email/email.html', context={
+        'old': changes['old'],
+        'new': changes['new'],
+        'topic':topic})
 
     email = EmailMultiAlternatives(
         subject='Task - {0} is update.'.format(topic),

@@ -14,16 +14,7 @@
         {% for project in projects %}
         <div class="row">
             <div class="col-lg-12 card-container">
-                <div class="card project-view">
-                    <div class="card-header">
-                        {{ project.slug_id }}
-                    </div>
-                    <div class="card-body">
-                        <h5 class="card-title">{{ project.name }}</h5>
-                        <p class="card-text">{{ project.description | safe | truncatewords:"50"|linebreaks }}</p>
-                        <p><b>{{ project.owner.first_name }}&nbsp;{{ project.owner.last_name }}</b></p>
-                    </div>
-                </div>
+                {% include '../components/project_card.html' %}
             </div>
         </div>
         {% endfor %}

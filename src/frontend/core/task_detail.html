@@ -60,6 +60,14 @@
                             data-task-id="{{ task.id }}"
                             data-url="{{ update_url }}">
                         {% endif %}
+                        {% if task.performer.user == request.user %}
+                            <a
+                                href="#"
+                                role="button"
+                                class="btn btn-warning left-card-btn">
+                                <span><b>Start Work</b></span>
+                            </a>
+                        {% endif %}
                     {% endif %}
                     <a
                         href="{% url 'edit_task' username=request.user.username slug=project_slug_id pk=task.id %}"

@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 # Local modules
-from ..models import Project
+from ..models import Project, Task
 from ..utils import slice_queryset, paginate
 
 
@@ -54,6 +54,22 @@ class UserHomeView(View):
                     context=context,
                     queryset_name='projects'
                 )
+
+            if tip == 'tasks':
+                if user.is_developer:
+                    tasks = Task.objects.filter(performer__user=request.user)
+
+                    context['title'] = 'Tasks'
+
+                    context = paginate(
+                        queryset=tasks,
+                        pages=5,
+                        request=request,
+                        context=context,
+                        queryset_name='tasks'
+                    )
+                    print(context)
+
 
             return render(request, 'core/home.html', context=context)
 

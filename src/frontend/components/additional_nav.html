@@ -13,7 +13,13 @@
             Projects
         </a>
     </li>
+    {% if user.is_developer %}
     <li class="nav-item">
-        <a class="nav-link" href="#">Tasks</a>
+        <a
+            class="nav-link {% url 'user_home' request.user.username as main %}{% if request.path == main and request.GET.tip == 'tasks' %}active{% endif %}"
+            href="{% url 'user_home' username=request.user.username %}?tip=tasks">
+            Tasks
+        </a>
     </li>
+    {% endif %}
 </ul>

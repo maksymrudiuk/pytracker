@@ -26,105 +26,136 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="row section-title">
-                    <div class="col-lg-4">
-                        <h3>{{ title }}</h3>
-                    </div>
-                    {% if user.is_admin and request.GET.tip == 'projects' %}
-                    <div class="col-lg-8">
-                        <a
-                            href="{% url 'create_project' %}"
-                            role="button"
-                            class="btn btn-success left-card-btn">
-                            <span><b>Add New</b></span>
-                        </a>
-                    </div>
-                    {% endif %}
-                </div>
-                <div class="row">
-                    <div class="col-lg-12 card-container">
-                        {% if not projects and user.is_developer %}
-                            The admin has not added you to any project.
-                            You can see avialable <a href="{% url 'projects' %}">projects</a>.
-                        {% endif %}
-                        {% for project in projects %}
-                        <div class="card project-view">
-                            <div class="card-header">
-                                {{ project.slug_id }}
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title">{{ project.name }}</h5>
-                                <p class="card-text">{{ project.created_at }}</p>
-                                <p class="card-text">{{ project.description | safe | truncatewords:"50"|linebreaks }}</p>
-                                <a
-                                    href="{% url 'project_detail' username=request.user.username slug=project.slug_id %}"
-                                    class="btn btn-primary">
-                                    View Detail
-                                </a>
-                            </div>
+        {% url 'user_home' request.user.username as main %}{% if request.path == main and not request.GET.tip %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row section-title">
+                        <div class="col-lg-4">
+                            <h3>{{ title }}</h3>
                         </div>
-                        {% endfor %}
                     </div>
-                    {% if has_other %}
-                    <div class="col-lg-12 text-center">
-                        <p>
-                            <a
-                                class="btn btn-light"
-                                role="button"
-                                href="{% url 'user_home' username=request.user.username %}?tip=projects">
-                                <b>View All My Project</b>
-                            </a>
-                        </p>
-                    </div>
-                    {% endif %}
-                    <div class="col-lg-12 justify-content-center">
-                    {% with object_list=projects %}
-                        {% include "components/pagination.html" %}
-                    {% endwith %}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- My Projects Section End -->
-        <!-- My Team Section Start -->
-        {% if user.is_admin and developers%}
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="row section-title">
-                    <div class="col-lg-4">
-                        <h3>Team</h3>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">First</th>
-                                <th scope="col">Last</th>
-                                <th scope="col">Username</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for developer in developers %}
-                                <tr>
-                                    <th scope="row">{{ forloop.counter }}</th>
-                                    <td>{{ developer.first_name }}</td>
-                                    <td>{{ developer.last_name }}</td>
-                                    <td>{{ developer.username }}</td>
-                                </tr>
+                    <div class="row">
+                        <div class="col-lg-12 card-container">
+                            {% for project in projects %}
+                                {% with view_detail=1 %}
+                                    {% include '../components/project_card.html' %}
+                                {% endwith %}
                             {% endfor %}
-                        </tbody>
-                    </table>
+                        </div>
+                        {% if has_other %}
+                        <div class="col-lg-12 text-center">
+                            <p>
+                                <a
+                                    class="btn btn-light"
+                                    role="button"
+                                    href="{% url 'user_home' username=request.user.username %}?tip=projects">
+                                    <b>View All My Project</b>
+                                </a>
+                            </p>
+                        </div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
+            <!-- My Team Section Start -->
+            {% if user.is_admin and developers%}
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row section-title">
+                        <div class="col-lg-4">
+                            <h3>Team</h3>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">First</th>
+                                    <th scope="col">Last</th>
+                                    <th scope="col">Username</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for developer in developers %}
+                                    <tr>
+                                        <th scope="row">{{ forloop.counter }}</th>
+                                        <td>{{ developer.first_name }}</td>
+                                        <td>{{ developer.last_name }}</td>
+                                        <td>{{ developer.username }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <!-- My Team Section End -->
+        {% elif request.GET.tip == 'projects' %}
+            <!-- Projects Tip Start-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row section-title">
+                        <div class="col-lg-4">
+                            <h3>{{ title }}</h3>
+                        </div>
+                        {% if user.is_admin %}
+                        <div class="col-lg-8">
+                            <a
+                                href="{% url 'create_project' %}"
+                                role="button"
+                                class="btn btn-success left-card-btn">
+                                <span><b>Add New</b></span>
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 card-container">
+                            {% for project in projects %}
+                                {% with view_detail=1  %}
+                                    {% include '../components/project_card.html' %}
+                                {% endwith %}
+                            {% endfor %}
+                        </div>
+                        <div class="col-lg-12 justify-content-center">
+                        {% with object_list=projects %}
+                            {% include "components/pagination.html" %}
+                        {% endwith %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Projects Tip end-->
+        {% elif request.GET.tip == 'tasks' and request.user.is_developer %}
+            <!-- Tasks Tip Start-->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="row section-title">
+                        <div class="col-lg-4">
+                            <h3>{{ title }}</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 card-container">
+                            {% for task in tasks %}
+                                {% with slug=task.project.slug_id %}
+                                    {% include '../components/task_card.html' %}
+                                {% endwith %}
+                            {% endfor %}
+                        </div>
+                        <div class="col-lg-12 justify-content-center">
+                        {% with object_list=tasks %}
+                            {% include "components/pagination.html" %}
+                        {% endwith %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Tasks Tip end-->
         {% endif %}
-
-        <!-- My Team Section End -->
     </div>
 </div>
 {% endblock content %}

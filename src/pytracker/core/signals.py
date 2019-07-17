@@ -1,9 +1,9 @@
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
-from .models import Task, Developer
 from django.db.models.fields.reverse_related import ManyToOneRel
 from django.db.models.fields.related import ForeignKey
 from django.db.models.fields import SmallIntegerField
+from .models import Task
 from .tasks import task_update_notification
 
 
@@ -20,9 +20,22 @@ def task_update(sender, instance, **kwargs):
         all_fields = [field for field in all_fields if not isinstance(field, ManyToOneRel)]
         for field in all_fields:
             if not getattr(old, field.name) == getattr(instance, field.name):
+
+                print(field.name)
+
                 if isinstance(field, ForeignKey):
-                    old_values.update({field.name: getattr(old, field.name).user.email})
-                    new_values.update({field.name: getattr(instance, field.name).user.email})
+                    if getattr(old, field.name) is not None and getattr(instance, field.name) is None:
+                        old_values.update({field.name: getattr(old, field.name).user.email})
+                        new_values.update({field.name: None})
+                    elif getattr(old, field.name) is None and getattr(instance, field.name) is not None:
+                        old_values.update({field.name: None})
+                        new_values.update({field.name: getattr(instance, field.name).user.email})
+                    elif getattr(old, field.name) is None and getattr(instance, field.name) is None:
+                        old_values.update({field.name: None})
+                        new_values.update({field.name: None})
+                    else:
+                        old_values.update({field.name: getattr(old, field.name).user.email})
+                        new_values.update({field.name: getattr(instance, field.name).user.email})
                 elif isinstance(field, SmallIntegerField) and field.choices:
                     choice_dict = dict(field.choices)
                     old_values.update({field.name: choice_dict.get(getattr(old, field.name))})
@@ -31,10 +44,10 @@ def task_update(sender, instance, **kwargs):
                     old_values.update({field.name: getattr(old, field.name)})
                     new_values.update({field.name: getattr(instance, field.name)})
 
-        changes.update({'old': old_values})
-        changes.update({'new': new_values})
-        changes.update({'pk': instance.pk})
-        task_update_notification.delay(changes, instance.creator.email)
+                changes.update({'old': old_values})
+                changes.update({'new': new_values})
+                changes.update({'pk': instance.pk})
+                task_update_notification.delay(changes, instance.creator.email)
 
     except instance.DoesNotExist:
         pass

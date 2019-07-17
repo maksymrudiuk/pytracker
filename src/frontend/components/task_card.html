@@ -1,0 +1,41 @@
+<div class="card bg-light task">
+    <div class="card-header">
+        <span class="header-title">
+            {{ task.topic }}&nbsp;{{ task.get_task_type_display }}
+        <span>
+        {% if control %}
+            {% if user.is_admin %}
+            <a
+                href="{% url 'delete_task' username=request.user.username slug=slug pk=task.id %}"
+                role="button"
+                class="btn btn-danger left-card-btn">
+                <span><b>Delete</b></span>
+            </a>
+            {% endif %}
+            <a
+                href="{% url 'edit_task' username=request.user.username slug=slug pk=task.id %}"
+                role="button"
+                class="btn btn-info left-card-btn">
+                <span><b>Edit</b></span>
+            </a>
+        {% endif %}
+        {% if task.performer.user == request.user %}
+            <a
+                href="#"
+                role="button"
+                class="btn btn-warning left-card-btn">
+                <span><b>Start Work</b></span>
+            </a>
+        {% endif %}
+
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ task.get_priority_display }}</h5>
+        <p class="card-text">{{ task.description | safe | truncatewords:"50"|linebreaks }}</p>
+            <a
+            href="{% url 'detail_task' username=request.user.username slug=slug pk=task.id %}"
+            class="btn btn-primary">
+            View Detail
+        </a>
+    </div>
+</div>

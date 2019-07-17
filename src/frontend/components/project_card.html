@@ -1,0 +1,17 @@
+<div class="card project-view">
+    <div class="card-header">
+        {{ project.slug_id }}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ project.name }}</h5>
+        <p class="card-text">{{ project.created_at }}</p>
+        <p class="card-text">{{ project.description | safe | truncatewords:"50"|linebreaks }}</p>
+        {% if view_detail %}
+        <a
+            href="{% url 'project_detail' username=request.user.username slug=project.slug_id %}"
+            class="btn btn-primary">
+            View Detail
+        </a>
+        {% endif %}
+    </div>
+</div>
