@@ -13,4 +13,7 @@ from .task import (
     TaskDeleteView
 )
 from .comment import CommentCreateView
-from .developer import DevelopersView, DevelopersAjaxDeleteView
+from .developer import (
+    DevelopersView,
+    DevelopersAjaxDeleteView)
+from .time_journal import TimeJournalView

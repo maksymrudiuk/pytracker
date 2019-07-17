@@ -21,7 +21,6 @@ from ..models import (
 from ..forms import (
     TaskCreateForm,
     TaskUpdateForm)
-from ..tasks import task_update_notification
 
 
 class TaskCreateView(CreateView):  # pylint: disable=too-many-ancestors

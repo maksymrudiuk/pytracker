@@ -68,8 +68,6 @@ class UserHomeView(View):
                         context=context,
                         queryset_name='tasks'
                     )
-                    print(context)
-
 
             return render(request, 'core/home.html', context=context)
 
