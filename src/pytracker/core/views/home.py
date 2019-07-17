@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 # Local modules
-from ..models import Project, Task, TimeJournal
+from ..models import Project, Task
 from ..utils import slice_queryset, paginate
 
 
@@ -86,6 +86,8 @@ class UserHomeView(View):
 
 @login_required
 def home(request):
+    """Redirect main home view"""
+
     return HttpResponseRedirect(reverse_lazy(
         'user_home',
         args=[request.user.username]))

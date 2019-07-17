@@ -146,6 +146,7 @@ class TaskDetailView(DetailView):  # pylint: disable=too-many-ancestors
         return context
 
     def post(self, request, *args, **kwargs):
+        """ Ajax request proccessing """
         data = request.POST
 
         task = Task.objects.get(pk=data['task_id'])

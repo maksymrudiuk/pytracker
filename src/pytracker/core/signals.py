@@ -8,7 +8,8 @@ from .tasks import task_update_notification
 
 
 @receiver(pre_save, sender=Task, dispatch_uid="task_update")
-def task_update(sender, instance, **kwargs):
+def task_update(sender, instance, **kwargs):  # pylint: disable=unused-argument
+    """ Task Update Signal """
 
     changes = dict()
     old_values = dict()
