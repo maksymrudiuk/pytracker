@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.views.generic.edit import (CreateView,
                                        UpdateView)
 
-from .models import UserProfile
+from .models import UserProfile, UserGroup
 from .forms import (BaseSignUpUserProfileForm,
                     UpdateUserProfileForm)
 
@@ -29,3 +29,20 @@ class UpdateUserProfileView(UpdateView):
 
     def get_success_url(self):
         return reverse('home')
+
+    def post(self, request, *args, **kwargs):
+
+        self.object = self.get_object()
+
+        if self.object.position == 1:
+            self.object.groups.add(UserGroup.objects.get(name='admins'))
+        if self.object.position == 2:
+            self.object.groups.add(UserGroup.objects.get(name='developers'))
+
+        self.object.save()
+
+        return super(UpdateUserProfileView, self).post(
+            request,
+            *args,
+            **kwargs
+        )

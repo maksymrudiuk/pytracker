@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import UserProfile
+from .models import UserProfile, UserGroup
 
 
 # Register your models here.
@@ -40,7 +40,6 @@ class UserProfileAdmin(UserAdmin):
              'is_staff',
              'is_superuser',
              'groups',
-             'user_permissions',
              )
          }
         ),
@@ -55,3 +54,4 @@ class UserProfileAdmin(UserAdmin):
 
 
 admin.site.register(UserProfile, UserProfileAdmin)
+admin.site.register(UserGroup)

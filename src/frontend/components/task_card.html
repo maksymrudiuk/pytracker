@@ -19,14 +19,13 @@
                     class="btn btn-info left-card-btn">
                     <span><b>Edit</b></span>
                 </a>
-                {% if task.performer == user and user.is_developer %}
+            {% elif task.performer.user == user and user.is_developer %}
                 <a
                     href="{% url 'time_journal' username=request.user.username slug=slug pk=task.id %}"
                     role="button"
                     class="btn btn-warning left-card-btn">
                     <span><b>Start Work</b></span>
                 </a>
-                {% endif %}
             {% endif %}
         {% else %}
             <span

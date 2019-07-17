@@ -13,6 +13,7 @@ from django.template.defaultfilters import slugify
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 # Local modules
+from user.decorators import group_required
 from ..models import (
     Project,
     Task,
@@ -85,7 +86,7 @@ class ProjectCreateView(CreateView):  # pylint: disable=too-many-ancestors
 
     model = Project
 
-    @method_decorator(login_required)
+    @method_decorator(group_required("admins"), login_required)
     def dispatch(self, request, *args, **kwargs):
         return super(ProjectCreateView, self).dispatch(request, *args, **kwargs)
 
@@ -144,7 +145,7 @@ class ProjectUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
     slug_field = 'slug_id'
     slug_url_kwarg = 'slug'
 
-    @method_decorator(login_required)
+    @method_decorator(group_required("admins"), login_required)
     def dispatch(self, request, *args, **kwargs):
         return super(ProjectUpdateView, self).dispatch(request, *args, **kwargs)
 
@@ -186,7 +187,7 @@ class ProjectDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
     slug_field = 'slug_id'
     slug_url_kwarg = 'slug'
 
-    @method_decorator(login_required)
+    @method_decorator(group_required("admins"), login_required)
     def dispatch(self, request, *args, **kwargs):
         return super(ProjectDeleteView, self).dispatch(request, *args, **kwargs)
 

@@ -16,7 +16,7 @@ class BaseSignUpUserProfileForm(forms.ModelForm):
         """ Meta definition for BaseSignUpUserProfile. """
 
         model = UserProfile
-        fields = ('username', 'email')
+        fields = ('username', 'email', 'position')
 
     def __init__(self, *args, **kwargs):
         super(BaseSignUpUserProfileForm, self).__init__(*args, **kwargs)
@@ -53,7 +53,7 @@ class UpdateUserProfileForm(forms.ModelForm):
         """ Meta definition for UpdateUserProfile. """
 
         model = UserProfile
-        fields = ('first_name', 'last_name', 'photo', 'date_of_birth', 'position')
+        fields = ('first_name', 'last_name', 'photo', 'date_of_birth', )
 
     def __init__(self, *args, **kwargs):
         super(UpdateUserProfileForm, self).__init__(*args, **kwargs)

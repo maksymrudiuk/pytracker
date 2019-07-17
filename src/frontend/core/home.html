@@ -27,72 +27,83 @@
         </div>
 
         {% url 'user_home' request.user.username as main %}{% if request.path == main and not request.GET.tip %}
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="row section-title">
-                        <div class="col-lg-4">
-                            <h3>{{ title }}</h3>
+            {% if projects %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row section-title">
+                            <div class="col-lg-4">
+                                <h3>{{ title }}</h3>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12 card-container">
-                            {% for project in projects %}
-                                {% with view_detail=1 %}
-                                    {% include '../components/project_card.html' %}
-                                {% endwith %}
-                            {% endfor %}
+                        <div class="row">
+                            <div class="col-lg-12 card-container">
+                                {% for project in projects %}
+                                    {% with view_detail=1 %}
+                                        {% include '../components/project_card.html' %}
+                                    {% endwith %}
+                                {% endfor %}
+                            </div>
+                            {% if has_other %}
+                            <div class="col-lg-12 text-center">
+                                <p>
+                                    <a
+                                        class="btn btn-light"
+                                        role="button"
+                                        href="{% url 'user_home' username=request.user.username %}?tip=projects">
+                                        <b>View All My Project</b>
+                                    </a>
+                                </p>
+                            </div>
+                            {% endif %}
                         </div>
-                        {% if has_other %}
-                        <div class="col-lg-12 text-center">
-                            <p>
-                                <a
-                                    class="btn btn-light"
-                                    role="button"
-                                    href="{% url 'user_home' username=request.user.username %}?tip=projects">
-                                    <b>View All My Project</b>
-                                </a>
-                            </p>
-                        </div>
-                        {% endif %}
                     </div>
                 </div>
-            </div>
-            <!-- My Team Section Start -->
-            {% if user.is_admin and developers%}
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="row section-title">
-                        <div class="col-lg-4">
-                            <h3>Team</h3>
+                <!-- My Team Section Start -->
+                {% if user.is_admin and developers%}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="row section-title">
+                            <div class="col-lg-4">
+                                <h3>Team</h3>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">First</th>
+                                        <th scope="col">Last</th>
+                                        <th scope="col">Username</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for developer in developers %}
+                                        <tr>
+                                            <th scope="row">{{ forloop.counter }}</th>
+                                            <td>{{ developer.first_name }}</td>
+                                            <td>{{ developer.last_name }}</td>
+                                            <td>{{ developer.username }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                    <hr>
-                    <div class="row">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">First</th>
-                                    <th scope="col">Last</th>
-                                    <th scope="col">Username</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for developer in developers %}
-                                    <tr>
-                                        <th scope="row">{{ forloop.counter }}</th>
-                                        <td>{{ developer.first_name }}</td>
-                                        <td>{{ developer.last_name }}</td>
-                                        <td>{{ developer.username }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
+                </div>
+                {% endif %}
+                <!-- My Team Section End -->
+            {% else %}
+            <div class="row">
+                <div class="col-lg-12">
+                    <p style="margin-top: 2em">
+                        You don`t have projects.&nbsp;
+                        <a href="{% url 'create_project' %}">Create your first project</a>
+                    </p>
                 </div>
             </div>
             {% endif %}
-            <!-- My Team Section End -->
         {% elif request.GET.tip == 'projects' %}
             <!-- Projects Tip Start-->
             <div class="row">

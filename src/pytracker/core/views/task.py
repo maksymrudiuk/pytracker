@@ -13,6 +13,7 @@ from django.views.generic.detail import DetailView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 # Local modules
+from user.decorators import group_required
 from ..models import (
     Project,
     Task,
@@ -27,7 +28,7 @@ class TaskCreateView(CreateView):  # pylint: disable=too-many-ancestors
 
     model = Task
 
-    @method_decorator(login_required)
+    @method_decorator(group_required("admins"), login_required)
     def dispatch(self, request, *args, **kwargs):
         return super(TaskCreateView, self).dispatch(request, *args, **kwargs)
 
@@ -163,7 +164,7 @@ class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
     template_name = "core/confirm_delete.html"
     context_object_name = 'context'
 
-    @method_decorator(login_required)
+    @method_decorator(group_required("admins"), login_required)
     def dispatch(self, request, *args, **kwargs):
         return super(TaskDeleteView, self).dispatch(request, *args, **kwargs)
 

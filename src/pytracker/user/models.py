@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group
 
 # Create your models here.
 class UserProfile(AbstractUser):
@@ -60,3 +60,10 @@ class UserProfile(AbstractUser):
     def is_developer(self):
         """ Check user role. """
         return self.position == 2
+
+
+class UserGroup(Group):
+    class Meta:
+        proxy = True
+        verbose_name = 'Group'
+        verbose_name_plural = 'Groups'

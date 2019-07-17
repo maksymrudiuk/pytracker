@@ -9,7 +9,9 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 # Local modules
 from user.models import UserProfile
+from user.decorators import group_required
 from ..models import Project, Developer
+
 # from ..utils import paginate
 
 
@@ -63,6 +65,10 @@ class DevelopersAjaxDeleteView(SingleObjectMixin, View):
 
     model = Developer
     queryset = Developer.objects.all()
+
+    @method_decorator(group_required("admins"), login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(DevelopersAjaxDeleteView, self).dispatch(request, *args, **kwargs)
 
     def post(self, *args, **kwargs):
         """ POST method processing. """
