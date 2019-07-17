@@ -37,8 +37,6 @@ class DevelopersView(TemplateView):
             }
         )
 
-        # context['project_slug_id'] = kwargs['slug']
-
         if not developers:
             context['developers'] = users
         else:
