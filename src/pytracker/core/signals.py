@@ -21,8 +21,6 @@ def task_update(sender, instance, **kwargs):
         for field in all_fields:
             if not getattr(old, field.name) == getattr(instance, field.name):
 
-                print(field.name)
-
                 if isinstance(field, ForeignKey):
                     if getattr(old, field.name) is not None and getattr(instance, field.name) is None:
                         old_values.update({field.name: getattr(old, field.name).user.email})

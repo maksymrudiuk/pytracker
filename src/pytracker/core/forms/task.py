@@ -7,7 +7,7 @@ from ..models import Task
 from ..widgets import BootstrapDateTimePickerInput
 
 
-class TaskCreateForm(forms.ModelForm):
+class TaskCreateUpdateForm(forms.ModelForm):
     """ Form definition for Task. """
 
     start_date = forms.DateTimeField(
@@ -43,61 +43,8 @@ class TaskCreateForm(forms.ModelForm):
     ]
 
     def __init__(self, *args, **kwargs):
-        super(TaskCreateForm, self).__init__(*args, **kwargs)
+        super(TaskCreateUpdateForm, self).__init__(*args, **kwargs)
 
-        self.helper = FormHelper(self)
-        self.helper.form_class = 'form-horizontal'
-        self.helper.form_method = 'post'
-        self.helper.label_class = 'col-md-4 control-label form-row'
-        self.helper.field_class = 'col-md-6 form-row'
-        self.helper.add_input(Submit('submit', 'Add'))
-
-    def save(self, commit=True):
-        task = super(TaskCreateForm, self).save(commit=False)
-        task.start_date = self.cleaned_data['start_date']
-        task.end_date = self.cleaned_data['end_date']
-        if commit:
-            task.save()
-        return task
-
-
-class TaskUpdateForm(forms.ModelForm):
-    """ Form definition to Update Task. """
-
-    start_date = forms.DateTimeField(
-        input_formats=['%d/%m/%Y %H:%M'],
-        widget=BootstrapDateTimePickerInput()
-    )
-
-    end_date = forms.DateTimeField(
-        input_formats=['%d/%m/%Y %H:%M'],
-        widget=BootstrapDateTimePickerInput()
-    )
-
-    class Meta:
-        """ Meta definition for TaskUpdateForm. """
-
-        model = Task
-        fields = [
-            'topic',
-            'task_type',
-            'priority',
-            'estimated_time',
-            'description'
-        ]
-
-    field_order = [
-        'topic',
-        'task_type',
-        'priority',
-        'start_date',
-        'end_date',
-        'estimated_time',
-        'description',
-    ]
-
-    def __init__(self, *args, **kwargs):
-        super(TaskUpdateForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.form_class = 'form-horizontal'
         self.helper.form_method = 'post'
@@ -113,8 +60,9 @@ class TaskUpdateForm(forms.ModelForm):
             css_class='btn btn-danger crispy-btn',
             formnovalidate='formnovalidate'))
 
+
     def save(self, commit=True):
-        task = super(TaskUpdateForm, self).save(commit=False)
+        task = super(TaskCreateUpdateForm, self).save(commit=False)
         task.start_date = self.cleaned_data['start_date']
         task.end_date = self.cleaned_data['end_date']
         if commit:

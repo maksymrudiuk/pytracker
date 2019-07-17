@@ -19,9 +19,7 @@ from ..models import (
     Comment,
     Developer,
     TimeJournal)
-from ..forms import (
-    TaskCreateForm,
-    TaskUpdateForm)
+from ..forms import TaskCreateUpdateForm
 
 
 class TaskCreateView(CreateView):  # pylint: disable=too-many-ancestors
@@ -36,7 +34,7 @@ class TaskCreateView(CreateView):  # pylint: disable=too-many-ancestors
     def get(self, request, *args, **kwargs):
 
         context = {
-            'form': TaskCreateForm,
+            'form': TaskCreateUpdateForm,
             'title': 'Add Task'
         }
 
@@ -44,7 +42,17 @@ class TaskCreateView(CreateView):  # pylint: disable=too-many-ancestors
 
     def post(self, request, *args, **kwargs):
 
-        form = TaskCreateForm(self.request.POST)
+        form = TaskCreateUpdateForm(self.request.POST)
+
+        if request.POST.get('cancel_btn'):
+            messages.warning(request, 'Task adding is canceled')
+            return HttpResponseRedirect(reverse_lazy(
+                'project_detail',
+                kwargs={
+                    'username': self.request.user.username,
+                    'slug': self.kwargs['slug']
+                }
+            ))
 
         if form.is_valid():
             obj = form.save(commit=False)
@@ -67,7 +75,7 @@ class TaskUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
 
     model = Task
     template_name = "core/form.html"
-    form_class = TaskUpdateForm
+    form_class = TaskCreateUpdateForm
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
