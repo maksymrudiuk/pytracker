@@ -17,7 +17,8 @@ from ..models import (
     Project,
     Task,
     Comment,
-    Developer)
+    Developer,
+    TimeJournal)
 from ..forms import (
     TaskCreateForm,
     TaskUpdateForm)
@@ -45,8 +46,7 @@ class TaskCreateView(CreateView):  # pylint: disable=too-many-ancestors
 
         form = TaskCreateForm(self.request.POST)
 
-        if form.is_valid:
-
+        if form.is_valid():
             obj = form.save(commit=False)
             obj.creator = self.request.user
             obj.project = Project.objects.get(slug_id=self.kwargs['slug'])
@@ -127,6 +127,8 @@ class TaskDetailView(DetailView):  # pylint: disable=too-many-ancestors
         context = super(TaskDetailView, self).get_context_data(**kwargs)
         context['project_slug_id'] = self.kwargs['slug']
         context['comments'] = Comment.objects.filter(for_task=self.object)
+        if self.object.status == 3:
+            context['spent_time'] = TimeJournal.objects.get(task=self.object).spent_time
         project = Project.objects.get(slug_id=self.kwargs['slug'])
         if self.request.user.is_admin:
             context['developers'] = Developer.objects.filter(project=project)
@@ -140,6 +142,7 @@ class TaskDetailView(DetailView):  # pylint: disable=too-many-ancestors
 
         task = Task.objects.get(pk=data['task_id'])
         task.performer = Developer.objects.get(pk=data['pk'])
+        task.status = 2
         task.save()
         return JsonResponse({'key': 'success'})
 

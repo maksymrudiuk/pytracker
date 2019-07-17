@@ -10,16 +10,16 @@ class TimeJournal(models.Model):
         verbose_name = 'TimeJournal'
         verbose_name_plural = 'TimeJournals'
 
-    spent_time = models.SmallIntegerField()
+    spent_time = models.DecimalField(max_digits=5, decimal_places=2)
 
     notes = models.TextField()
 
-    task = models.ForeignKey(
+    task = models.OneToOneField(
         'core.Task',
-        null=True,
+        primary_key=True,
         on_delete=models.CASCADE
     )
 
     def __str__(self):
         """Unicode representation of TimeJournal."""
-        return "%s - %s" % (self.task - self.spent_time)
+        return "%s - %s" % (self.task, self.spent_time)

@@ -14,13 +14,20 @@ def task_update_notification(changes, creator_email):
     topic = Task.objects.get(pk=changes['pk']).topic
 
     recipient_list = [creator_email,]
-    if changes['old']['performer'] is None:
-        recipient_list.append(changes['new']['performer'])
-    elif changes['new']['performer'] is None:
-        recipient_list.append(changes['old']['performer'])
+
+    if 'perfomer' in changes['old'].keys():
+        if changes['old']['performer'] is None:
+            recipient_list.append(changes['new']['performer'])
+        elif changes['new']['performer'] is None:
+            recipient_list.append(changes['old']['performer'])
+        else:
+            recipient_list.append(changes['new']['performer'])
+            recipient_list.append(changes['old']['performer'])
     else:
-        recipient_list.append(changes['new']['performer'])
-        recipient_list.append(changes['old']['performer'])
+        performer = Task.objects.get(pk=changes['pk']).performer
+        if performer is not None:
+            recipient_list.append(performer.user.email)
+
 
     body = render_to_string('email/email.html', context={
         'old': changes['old'],

@@ -50,15 +50,16 @@ class TaskAdmin(admin.ModelAdmin):
              'topic',
              'description',
              'task_type',
-             'priority'
+             'priority',
+             'status'
              )
          }
         ),
         ("Relations",
          {'fields': (
-             'project',
              'creator',
-             'performer'
+             'project',
+             'performer',
              )
          }
         ),
@@ -71,9 +72,21 @@ class TaskAdmin(admin.ModelAdmin):
          }
         )
     )
+
+    readonly_fields = ('creator', 'status',)
+
     inlines = [
         CommentInline,
     ]
+
+    def save_model(self, request, obj, form, change):
+        if getattr(obj, 'creator', None) is None:
+            obj.creator = request.user
+        if getattr(obj, 'performer', None) is None:
+            obj.status = 1
+        if getattr(obj, 'performer', None) is not None:
+            obj.status = 2
+        obj.save()
 
 
 # Register your models here.

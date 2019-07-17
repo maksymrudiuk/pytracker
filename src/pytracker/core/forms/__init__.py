@@ -4,3 +4,4 @@ from .task import (
     TaskUpdateForm
 )
 from .comment import CommentAddForm
+from .time_journal import TimeJournalForm

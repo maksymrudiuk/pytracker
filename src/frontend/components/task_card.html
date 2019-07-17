@@ -3,29 +3,37 @@
         <span class="header-title">
             {{ task.topic }}&nbsp;{{ task.get_task_type_display }}
         <span>
-        {% if control %}
-            {% if user.is_admin %}
-            <a
-                href="{% url 'delete_task' username=request.user.username slug=slug pk=task.id %}"
-                role="button"
-                class="btn btn-danger left-card-btn">
-                <span><b>Delete</b></span>
-            </a>
+        {% if not task.status == 3 %}
+            {% if control %}
+                {% if user.is_admin %}
+                <a
+                    href="{% url 'delete_task' username=request.user.username slug=slug pk=task.id %}"
+                    role="button"
+                    class="btn btn-danger left-card-btn">
+                    <span><b>Delete</b></span>
+                </a>
+                {% endif %}
+                <a
+                    href="{% url 'edit_task' username=request.user.username slug=slug pk=task.id %}"
+                    role="button"
+                    class="btn btn-info left-card-btn">
+                    <span><b>Edit</b></span>
+                </a>
+                {% if task.performer == user and user.is_developer %}
+                <a
+                    href="{% url 'time_journal' username=request.user.username slug=slug pk=task.id %}"
+                    role="button"
+                    class="btn btn-warning left-card-btn">
+                    <span><b>Start Work</b></span>
+                </a>
+                {% endif %}
             {% endif %}
-            <a
-                href="{% url 'edit_task' username=request.user.username slug=slug pk=task.id %}"
-                role="button"
-                class="btn btn-info left-card-btn">
-                <span><b>Edit</b></span>
-            </a>
-        {% endif %}
-        {% if task.performer.user == request.user and request.user.is_developer %}
-            <a
-                href="{% url 'time_journal' username=request.user.username slug=slug pk=task.id %}"
-                role="button"
-                class="btn btn-warning left-card-btn">
-                <span><b>Start Work</b></span>
-            </a>
+        {% else %}
+            <span
+                class="text-muted"
+                style="float: right">
+                Task is Completed. View Detail for more information
+            </span>
         {% endif %}
 
     </div>

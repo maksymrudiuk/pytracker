@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 # Local modules
-from ..models import Project, Task
+from ..models import Project, Task, TimeJournal
 from ..utils import slice_queryset, paginate
 
 

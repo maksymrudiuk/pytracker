@@ -44,10 +44,11 @@ def task_update(sender, instance, **kwargs):
                     old_values.update({field.name: getattr(old, field.name)})
                     new_values.update({field.name: getattr(instance, field.name)})
 
-                changes.update({'old': old_values})
-                changes.update({'new': new_values})
-                changes.update({'pk': instance.pk})
-                task_update_notification.delay(changes, instance.creator.email)
+        if old_values and new_values:
+            changes.update({'old': old_values})
+            changes.update({'new': new_values})
+            changes.update({'pk': instance.pk})
+            task_update_notification.delay(changes, instance.creator.email)
 
     except instance.DoesNotExist:
         pass

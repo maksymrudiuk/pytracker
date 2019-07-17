@@ -112,7 +112,7 @@ class ProjectCreateView(CreateView):  # pylint: disable=too-many-ancestors
             )
             return HttpResponseRedirect("%s?tip=projects" % url)
 
-        if form.is_valid:
+        if form.is_valid():
 
             # Pre save form
             obj = form.save(commit=False)

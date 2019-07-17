@@ -22,6 +22,12 @@ class Task(models.Model):
         (3, 'Urgently'),
     )
 
+    TASK_STATUS = (
+        (1, 'Free'),
+        (2, 'Proccess'),
+        (3, 'Done')
+    )
+
     topic = models.CharField(
         "Topic",
         max_length=255,
@@ -52,12 +58,21 @@ class Task(models.Model):
         blank=False
     )
 
+    status = models.SmallIntegerField(
+        'Status',
+        choices=TASK_STATUS,
+        blank=False,
+        editable=False,
+        default=1
+    )
+
     estimated_time = models.DecimalField(max_digits=5, decimal_places=2)
 
     creator = models.ForeignKey(
         'user.UserProfile',
         related_name='user_creator',
         null=True,
+        editable=False,
         on_delete=models.CASCADE
     )
 

@@ -1,14 +1,8 @@
 from django.shortcuts import render
-# from django.contrib import messages
-# from django.urls import reverse_lazy
-# from django.http import (
-#     HttpResponseRedirect,
-#     JsonResponse)
-# from django.views.generic.edit import (
-#     CreateView,
-#     UpdateView,
-#     DeleteView)
-# from django.views.generic.detail import DetailView
+from django.contrib import messages
+from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
+from django.views.generic.edit import CreateView
 from django.views.generic.base import TemplateView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -17,31 +11,56 @@ from ..models import (
     Task,
     TimeJournal)
 
+from ..forms import TimeJournalForm
 
-class TimeJournalView(TemplateView):
+
+class TimeJournalView(CreateView):
     """ Developers View definition. """
-    template_name = 'core/fix_time.html'
+    model = TimeJournal
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         return super(TimeJournalView, self).dispatch(request, *args, **kwargs)
 
-    def get_context_data(self, **kwargs):
+    def get(self, request, *args, **kwargs):
 
-        context = super(TimeJournalView, self).get_context_data(**kwargs)
+        context = dict()
         context['task'] = Task.objects.get(pk=kwargs['pk'])
+        context['form'] = TimeJournalForm
+        return render(request, 'core/fix_time.html', context=context)
 
-        return context
+    def post(self, request, *args, **kwargs):
+        """ POST method processing. """
 
-    # def post(self, request, *args, **kwargs):
-    #     """ POST method processing. """
-    #     data = request.POST
+        form = TimeJournalForm(self.request.POST)
 
-    #     user = UserProfile.objects.get(pk=data['pk'])
-    #     project = Project.objects.get(slug_id=data['slug'])
+        if request.POST.get('cancel_btn'):
+            messages.warning(request, 'Work is stoped')
+            url = reverse_lazy(
+                'user_home',
+                kwargs={
+                    'username': request.user.username
+                }
+            )
+            return HttpResponseRedirect("%s?tip=tasks" % url)
 
-    #     obj = Developer(
-    #         user=user,
-    #         project=project)
-    #     obj.save()
-    #     return JsonResponse({'key': 'success'})
+        if form.is_valid():
+            task = Task.objects.get(pk=kwargs['pk'])
+            # Update Task Status
+            task.status = 3
+            task.save()
+
+            obj = form.save(commit=False)
+            obj.task = task
+            obj.save()
+
+            messages.success(request, 'Task is completed')
+            url = reverse_lazy(
+                'user_home',
+                kwargs={
+                    'username': request.user.username
+                }
+            )
+            return HttpResponseRedirect("%s?tip=tasks" % url)
+
+        return render(request, 'core/fix_time.html', {'form': form})

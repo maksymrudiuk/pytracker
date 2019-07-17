@@ -34,7 +34,7 @@ class CommentCreateView(CreateView):  # pylint: disable=too-many-ancestors
 
         form = CommentAddForm(self.request.POST)
 
-        if form.is_valid:
+        if form.is_valid():
             obj = form.save(commit=False)
             obj.owner = request.user
             obj.for_task = Task.objects.get(pk=kwargs['pk'])
