@@ -15,6 +15,7 @@ django-tinymce = "*"
 django-crispy-forms = "*"
 celery = "*"
 mysqlclient = "*"
+whitenoise = "*"
 
 [requires]
 python_version = "3.6"
