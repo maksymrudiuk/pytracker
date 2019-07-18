@@ -1,4 +1,5 @@
 from django.forms import DateTimeInput
+from .models import Task
 
 
 class BootstrapDateTimePickerInput(DateTimeInput):

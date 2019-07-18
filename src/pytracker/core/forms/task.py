@@ -44,6 +44,9 @@ class TaskCreateUpdateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(TaskCreateUpdateForm, self).__init__(*args, **kwargs)
+        if self.instance:
+            self.fields['start_date'].initial = self.instance.start_date
+            self.fields['end_date'].initial = self.instance.end_date
 
         self.helper = FormHelper(self)
         self.helper.form_class = 'form-horizontal'
