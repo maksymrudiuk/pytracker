@@ -1,3 +1,5 @@
+""" Signals proccessing for core app. """
+
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
 from django.db.models.fields.reverse_related import ManyToOneRel

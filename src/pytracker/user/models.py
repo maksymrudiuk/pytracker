@@ -1,3 +1,4 @@
+""" Model definition for user app """
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group
 
@@ -63,7 +64,11 @@ class UserProfile(AbstractUser):
 
 
 class UserGroup(Group):
+    """ Model definition for UserGroup. """
+
     class Meta:
+        """ Meta definition for UserProfile. """
+
         proxy = True
         verbose_name = 'Group'
         verbose_name_plural = 'Groups'

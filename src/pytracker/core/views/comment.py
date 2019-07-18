@@ -1,3 +1,4 @@
+""" This module include Views definition for Comment. """
 # Django Imports
 from django.shortcuts import render
 from django.urls import reverse_lazy

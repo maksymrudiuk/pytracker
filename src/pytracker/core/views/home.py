@@ -1,3 +1,4 @@
+""" This module include View definition for Overview home page. """
 # Django Imports
 from django.shortcuts import render
 from django.views import View

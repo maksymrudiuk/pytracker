@@ -79,9 +79,9 @@ WSGI_APPLICATION = 'pytracker.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 try:
-    from .db_settings import DATABASES
+    from .db_settings import DATABASES  # pylint: disable=unused-import
 
-except:
+except ImportError:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

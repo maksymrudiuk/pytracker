@@ -1,3 +1,4 @@
+""" This module include Views definition for Task model. """
 # Django Imports
 from django.shortcuts import render
 from django.contrib import messages
@@ -93,7 +94,7 @@ class TaskUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
 
     def post(self, request, *args, **kwargs):
 
-        self.object = self.get_object()
+        self.object = self.get_object()  # pylint: disable=attribute-defined-outside-init
 
         if self.object.status == 3:
             messages.warning(request, 'Task is not editable after completed. You can only delete.')

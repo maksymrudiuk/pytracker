@@ -1,3 +1,4 @@
+""" This module include Views definition for Developer. """
 # Django Imports
 from django.urls import reverse_lazy
 from django.http import JsonResponse
@@ -68,8 +69,8 @@ class DevelopersAjaxDeleteView(SingleObjectMixin, View):
     def dispatch(self, request, *args, **kwargs):
         return super(DevelopersAjaxDeleteView, self).dispatch(request, *args, **kwargs)
 
-    def post(self, *args, **kwargs):
+    def post(self, *args, **kwargs):  # pylint: disable=unused-argument
         """ POST method processing. """
-        self.object = self.get_object()
+        self.object = self.get_object()  # pylint: disable=attribute-defined-outside-init
         self.object.delete()
         return JsonResponse({'key': 'success'})

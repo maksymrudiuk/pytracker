@@ -1,3 +1,4 @@
+""" Forms definition for UserProfile Models """
 from django import forms
 
 from crispy_forms.helper import FormHelper

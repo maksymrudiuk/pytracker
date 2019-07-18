@@ -1,3 +1,5 @@
+""" Admin settings for core app and reletive Models. """
+
 from django.contrib import admin
 from .models import (Project,
                      Task,

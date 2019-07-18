@@ -1,3 +1,5 @@
+""" URLs config for user app. """
+
 from django.urls import path
 from .views import SignUpView, UpdateUserProfileView
 

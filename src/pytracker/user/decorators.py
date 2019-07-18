@@ -1,3 +1,5 @@
+""" Custom decorators for user. """
+
 from django.contrib.auth.decorators import user_passes_test
 
 

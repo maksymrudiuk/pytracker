@@ -1,3 +1,5 @@
+""" This module include models definition for Comment. """
+
 from django.db import models
 
 

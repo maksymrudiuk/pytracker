@@ -1,4 +1,4 @@
-from django.shortcuts import render
+""" This module include Views definition for User model """
 from django.urls import reverse
 from django.views.generic.edit import (CreateView,
                                        UpdateView)
@@ -32,7 +32,7 @@ class UpdateUserProfileView(UpdateView):
 
     def post(self, request, *args, **kwargs):
 
-        self.object = self.get_object()
+        self.object = self.get_object()  # pylint: disable=attribute-defined-outside-init
 
         if self.object.position == 1:
             self.object.groups.add(UserGroup.objects.get(name='admins'))

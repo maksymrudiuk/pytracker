@@ -1,4 +1,6 @@
-from django.urls import path, include, re_path
+""" URLs config for core app. """
+
+from django.urls import path
 from .views import (
     home,
     UserHomeView,

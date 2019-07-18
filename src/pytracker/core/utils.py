@@ -1,3 +1,5 @@
+""" This module include help functions for all views """
+
 from django.core.paginator import (
     Paginator,
     EmptyPage,
@@ -37,7 +39,7 @@ def paginate(queryset, pages, request, context, queryset_name):
     return context
 
 def slice_queryset(queryset, context, size, queryset_name):
-
+    """ Get N first elements in query set """
     if isinstance(queryset_name, str):
 
         if len(queryset) > size:
@@ -48,5 +50,4 @@ def slice_queryset(queryset, context, size, queryset_name):
             context['has_other'] = False
 
         return context
-    else:
-        raise TypeError('Varialable queryset_name must be a string')
+    raise TypeError('Varialable queryset_name must be a string')

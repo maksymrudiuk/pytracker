@@ -1,8 +1,10 @@
+""" This module include Custom widgets definition. """
 from django.forms import DateTimeInput
-from .models import Task
 
 
 class BootstrapDateTimePickerInput(DateTimeInput):
+    """Custom DateTime widget for Forms"""
+
     template_name = 'core/widgets/bootstrap_datetimepicker.html'
 
     def get_context(self, name, value, attrs):

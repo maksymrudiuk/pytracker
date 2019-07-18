@@ -1,7 +1,9 @@
+""" This module include Views definition for Project. """
+
 # Django Imports
 from django.shortcuts import render
 from django.contrib import messages
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
 from django.views.generic import ListView
 from django.views.generic.edit import (
