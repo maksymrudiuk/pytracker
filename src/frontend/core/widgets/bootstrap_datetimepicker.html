@@ -18,10 +18,11 @@
 <!-- Bootstrap DateTime Picker Setup -->
 <script>
 $(function () {
+    date = "{{ widget.value }}"
     $("#{{ widget.datetimepicker_id }}").datetimepicker({
         format: 'DD/MM/YYYY HH:mm',
-        defaultDate: isNaN("{{ widget.value }}") ? new Date() : "{{ widget.value }}",
-        date: isNaN("{{ widget.value }}") ? new Date() : "{{ widget.value }}",
+        defaultDate: date == 'None' ? new Date() : date,
+        date: date == 'None' ? new Date() : date,
     });
 });
 </script>

@@ -148,7 +148,7 @@ class TaskDetailView(DetailView):  # pylint: disable=too-many-ancestors
     def get_context_data(self, **kwargs):
         context = super(TaskDetailView, self).get_context_data(**kwargs)
         context['project_slug_id'] = self.kwargs['slug']
-        context['comments'] = Comment.objects.filter(for_task=self.object)
+        context['comments'] = Comment.objects.filter(for_task=self.object).order_by('-date_of_add')
         if self.object.status == 3:
             context['spent_time'] = TimeJournal.objects.get(task=self.object).spent_time
         project = Project.objects.get(slug_id=self.kwargs['slug'])

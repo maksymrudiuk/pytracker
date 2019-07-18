@@ -26,7 +26,7 @@ class Task(models.Model):
 
     TASK_STATUS = (
         (1, 'Free'),
-        (2, 'Proccess'),
+        (2, 'Performing'),
         (3, 'Done')
     )
 
