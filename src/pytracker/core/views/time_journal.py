@@ -23,10 +23,22 @@ class TimeJournalView(CreateView):
 
     def get(self, request, *args, **kwargs):
 
-        context = dict()
-        context['task'] = Task.objects.get(pk=kwargs['pk'])
-        context['form'] = TimeJournalForm
-        return render(request, 'core/fix_time.html', context=context)
+        task = Task.objects.get(pk=kwargs['pk'])
+
+        if not task.status == 3:
+
+            context = dict()
+            context['task'] = task
+            context['form'] = TimeJournalForm
+            return render(request, 'core/fix_time.html', context=context)
+
+        url = reverse_lazy(
+            'user_home',
+            kwargs={
+                'username': request.user.username
+            }
+        )
+        return HttpResponseRedirect("%s?tip=tasks" % url)
 
     def post(self, request, *args, **kwargs):
         """ POST method processing. """
