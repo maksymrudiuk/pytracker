@@ -44,6 +44,7 @@ Pipfile.lock
 # DB files and dumps
 *.sqlite3
 db.json
+db_settings.py
 
 # Media and compile staticfiles
 media/
