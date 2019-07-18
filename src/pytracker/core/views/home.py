@@ -49,7 +49,7 @@ class UserHomeView(View):
 
                 context = paginate(
                     queryset=projects,
-                    pages=5,
+                    pages=3,
                     request=request,
                     context=context,
                     queryset_name='projects'

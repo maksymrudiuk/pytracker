@@ -50,7 +50,3 @@ def slice_queryset(queryset, context, size, queryset_name):
         return context
     else:
         raise TypeError('Varialable queryset_name must be a string')
-
-
-def create_notificate_message(old, new):
-    pass

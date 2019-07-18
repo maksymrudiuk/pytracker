@@ -131,6 +131,9 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, '..', 'frontend/static')
 ]
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
+
 
 # Crispy Forms Bootstrap 4
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

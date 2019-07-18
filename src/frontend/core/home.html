@@ -6,12 +6,21 @@
     <div class="col-lg-4">
         <div class="user-data-section">
             <div class="user-photo text-center">
-                <img
+                {% if user.photo %}
+                    <img
+                    class="img-fluid img-thumbnail"
+                    src="{{ user.photo.url }}"
+                    alt="User Image"
+                    width="200"
+                    height="200">
+                {% else %}
+                    <img
                     class="img-fluid img-thumbnail"
                     src="{% static 'img/user_image.png' %}"
                     alt="User Image"
                     width="200"
                     height="200">
+                {% endif %}
             </div>
             <div class="text-center personal-info">
                 <p><b>{{ user.first_name }}&nbsp;{{ user.last_name }}</b></p>
@@ -59,7 +68,7 @@
                     </div>
                 </div>
                 <!-- My Team Section Start -->
-                {% if user.is_admin and developers%}
+                {% if user.is_admin and developers %}
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="row section-title">
