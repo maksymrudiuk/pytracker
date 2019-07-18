@@ -1,3 +1,4 @@
+<!-- Bootstrap DateTime Picker -->
 <div
     class="input-group date"
     id="{{ widget.datetimepicker_id }}"
@@ -12,15 +13,18 @@
         </div>
     </div>
 </div>
+<!-- Bootstrap DateTime Picker -->
 
+<!-- Bootstrap DateTime Picker Setup -->
 <script>
 $(function () {
     $("#{{ widget.datetimepicker_id }}").datetimepicker({
         format: 'DD/MM/YYYY HH:mm',
-        defaultDate: "{{ widget.value }}",
-        date: "{{ widget.value }}"
+        defaultDate: isNaN("{{ widget.value }}") ? new Date() : "{{ widget.value }}",
+        date: isNaN("{{ widget.value }}") ? new Date() : "{{ widget.value }}",
     });
 });
 </script>
+<!-- Bootstrap DateTime Picker Setup-->
 
 

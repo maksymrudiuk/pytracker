@@ -25,10 +25,12 @@
         integrity="sha256-XPTBwC3SBoWHSmKasAk01c08M6sIA5gF5+sRxqak2Qs="
         crossorigin="anonymous">
     <!-- Bootstrap CSS Zone end -->
+    <!-- Custom CSS -->
     <link
         rel="stylesheet"
         href="{% static 'css/style.css' %}">
-    <script
+    <!-- jQuery -->
+        <script
         src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
         crossorigin="anonymous">
@@ -39,19 +41,25 @@
         integrity="sha256-VBLiveTKyUZMEzJd6z2mhfxIqz3ZATCuVMawPZGzIfA="
         crossorigin="anonymous">
     </script>
+    <!-- jQuery -->
+    <!-- Tempus Dominus -->
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js"
         integrity="sha256-z0oKYg6xiLq3yJGsp/LsY9XykbweQlHl42jHv2XTBz4="
         crossorigin="anonymous">
      </script>
+     <!-- Favicon -->
      <link
         rel="shortcut icon"
         type='image/png'
         href="{% static 'ico/python-icon.png' %}">
+    <!-- Favicon -->
     <title>PyTracker</title>
 </head>
 <body class="d-flex flex-column h-100" cz-shortcut-listen="true">
+    <!-- Start Container -->
     <div class="container-fluid content">
+        <!-- Main navigation -->
         <nav class="navbar navbar-expand-md navbar-dark bg-dark">
             <a class="navbar-brand" href="{% url 'home' %}">PyTracker</a>
             <button
@@ -93,6 +101,8 @@
                 </div>
             {% endif %}
         </nav>
+        <!-- Main navigation -->
+        <!-- Status Message -->
         <div class="row">
             <div class="col-lg-4 offset-lg-4 col-md-4 offset-md-4 col-sm-6 offset-sm-3 info-message">
                 {% block status_message %}
@@ -108,6 +118,8 @@
                 {% endblock status_message %}
             </div>
         </div>
+        <!-- Status Message -->
+        <!-- Main content -->
         <main role="main" class="flex-shrink-0">
             <div class="row content">
                 <div class="col-lg-12">
@@ -115,12 +127,16 @@
                 </div>
             </div>
         </main>
+        <!-- Main content -->
+        <!-- Footer -->
         <footer class="row footer">
             <div class="col-lg-12 text-center">
                 <p class="copyright-info">&copy;&nbsp;Copyrights&nbsp;<b>{% now "Y" %}</b></p>
             </div>
         </footer>
+        <!-- Footer -->
     </div>
+    <!-- End Container -->
     <!-- Bootstrap Script Zone Start -->
     <script
         src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
@@ -132,10 +148,10 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous">
     </script>
+    <!-- Bootstrap Script Zone End -->
+    <!-- Custom Scipts -->
     <script
         src="{% static 'js/script.js' %}">
     </script>
-    {% block extra_js %}{% endblock extra_js %}
-    <!-- Bootstrap Script Zone End -->
 </body>
 </html>

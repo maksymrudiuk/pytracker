@@ -2,7 +2,9 @@
 
 {% load crispy_forms_tags %}
 
+<!-- Start Content Block -->
 {% block content %}
+<!-- Universal Crispy Form Template -->
 <div class="row text-center">
     <div class="col-lg-6 offset-lg-3">
         <h1 class="h3 mb-3 font-weight-normal">{{ title }}</h1>
@@ -10,4 +12,6 @@
         {% crispy form %}
     </div>
 </div>
+<!-- Universal Crispy Form Template -->
 {% endblock content %}
+<!-- Start Content Block -->

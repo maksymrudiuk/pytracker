@@ -2,8 +2,9 @@
 
 {% load static from staticfiles %}
 
+<!-- Start Content Block -->
 {% block content %}
-<!-- My Projects Section Start -->
+<!-- Project Detail Section Start -->
 <div class="row text-center">
     <div class="col-lg-12">
         <h1>{{ object.name }}&nbsp;Overview</h1>
@@ -37,10 +38,10 @@
         </div>
     </div>
 </div>
-<!-- My Projects Section End -->
+<!-- Project Detail Section End -->
+<!-- Task for current project -->
 <div class="row">
     <div class="col-lg-12 card-container">
-
         <div class="card project-view">
             <div class="card-header">
                 <span class="header-title">Tasks</span>
@@ -71,7 +72,9 @@
         </div>
     </div>
 </div>
+<!-- Task for current project -->
 {% if user.is_admin %}
+<!-- Team section start -->
 <div class="row" style="margin-bottom: 1em">
     <div class="col-12">
         <div class="card">
@@ -96,6 +99,7 @@
                     </div>
                 </div>
                 {% if object.developers.all %}
+                <!-- Developers in current project table -->
                 <table class="table">
                     <thead>
                         <tr>
@@ -125,6 +129,7 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                <!-- Developers in current project table -->
                 {% else %}
                 <h3>You don`t add developers in this Project</h3>
                 {% endif %}
@@ -132,5 +137,7 @@
         </div>
     </div>
 </div>
+<!-- Team section start -->
 {% endif %}
 {% endblock content %}
+<!-- Start Content Block -->

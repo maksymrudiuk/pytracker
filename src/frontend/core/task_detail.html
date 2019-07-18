@@ -2,6 +2,7 @@
 
 {% load static from staticfiles %}
 
+<!-- Start Content Block -->
 {% block content %}
 <!-- Task Detail Section Start -->
 <div class="row">
@@ -26,6 +27,7 @@
         <div class="card project-view">
             <div class="card-header">
                 <span class="header-title">General</span>
+                <!-- Control buttons zone -->
                 {% if not task.status == 3 %}
                     {% if user.is_admin %}
                         <a
@@ -89,7 +91,9 @@
                         &nbsp;(Task is Completed)
                     </span>
                 {% endif %}
+                <!-- Control buttons zone -->
             </div>
+            <!-- Task detail description -->
             <div class="card-body">
                 <p class="card-text">
                     <b>Type:</b>&nbsp;
@@ -128,9 +132,11 @@
                     {{ task.description | safe }}
                 </p>
             </div>
+            <!-- Task detail description -->
         </div>
     </div>
 </div>
+<!-- Comments for current Task -->
 <div class="row">
     <div class="col-lg-12 card-container">
 
@@ -163,9 +169,10 @@
         </div>
     </div>
 </div>
+<!-- Comments for current Task -->
 
 {% if user.is_admin %}
-    <!-- Modal -->
+<!-- Modal window with developers -->
 <div
     class="modal fade"
     id="developersModalCenter"
@@ -200,5 +207,7 @@
         </div>
     </div>
 </div>
+<!-- Modal window with developers -->
 {% endif %}
 {% endblock content %}
+<!-- Start Content Block -->
