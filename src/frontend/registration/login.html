@@ -9,6 +9,8 @@
 {% endblock status_message %}
 
 {% block content %}
+
+{% if not request.user.is_authenticated %}
 <div class="row text-center">
     <div class="col-md-12">
         <form class="form-signin" method="post">
@@ -46,6 +48,13 @@
         </form>
     </div>
 </div>
+{% else %}
+<div class="row">
+    <div class="col-md-12">
+        <h3>You login now. <a href="{% url 'user_home' request.user.username %}">Overview</a></h3>
+    </div>
+</div>
+{% endif %}
 {% endblock content %}
 
 

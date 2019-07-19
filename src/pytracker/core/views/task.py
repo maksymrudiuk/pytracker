@@ -81,6 +81,16 @@ class TaskUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()  # pylint: disable=attribute-defined-outside-init
+        if self.object.status == 3:
+            messages.warning(request, 'Task is not editable after completed. You can only delete.')
+            return HttpResponseRedirect(reverse_lazy(
+                'project_detail',
+                kwargs={
+                    'username': self.request.user.username,
+                    'slug': self.kwargs['slug']
+                }
+            ))
         return super(TaskUpdateView, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
@@ -94,19 +104,7 @@ class TaskUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
 
     def post(self, request, *args, **kwargs):
 
-        self.object = self.get_object()  # pylint: disable=attribute-defined-outside-init
-
-        if self.object.status == 3:
-            messages.warning(request, 'Task is not editable after completed. You can only delete.')
-            return HttpResponseRedirect(reverse_lazy(
-                'project_detail',
-                kwargs={
-                    'username': self.request.user.username,
-                    'slug': self.kwargs['slug']
-                }
-            ))
-
-        elif request.POST.get('cancel_btn'):
+        if request.POST.get('cancel_btn'):
             messages.warning(request, 'Task editing is canceled')
             return HttpResponseRedirect(reverse_lazy(
                 'project_detail',

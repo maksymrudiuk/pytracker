@@ -74,6 +74,7 @@ class ProjectDetailView(DetailView):  # pylint: disable=too-many-ancestors
                 queryset = Project.objects.filter(developers=self.request.user)
         else:
             queryset = Project.objects.none()
+
         return queryset
 
     def get_context_data(self, **kwargs):

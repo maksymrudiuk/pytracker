@@ -25,26 +25,25 @@ class UserHomeView(View):
         context = {}
         tip = request.GET.get('tip')
         user = self.request.user
-        projects = Project.objects.all()
 
         if user.is_authenticated:
 
             if tip is None:
-                if user.is_admin:
-                    projects = projects.filter(owner=user).order_by('-created_at')
+                if user.is_admin or user.is_superuser:
+                    projects = Project.objects.filter(owner=user).order_by('-created_at')
                     context['developers'] = self.get_developers_list(projects)
                 elif user.is_developer:
-                    projects = projects.filter(developers=user).order_by('-created_at')
+                    projects = Project.objects.filter(developers=user).order_by('-created_at')
 
                 context['title'] = 'Recently projects'
                 context = slice_queryset(projects, context, 2, 'projects')
 
             if tip == 'projects':
 
-                if user.is_admin:
-                    projects = projects.filter(owner=user).order_by('-created_at')
+                if user.is_admin or user.is_superuser:
+                    projects = Project.objects.filter(owner=user).order_by('-created_at')
                 elif user.is_developer:
-                    projects = projects.filter(developers=user).order_by('-created_at')
+                    projects = Project.objects.filter(developers=user).order_by('-created_at')
 
                 context['title'] = 'Projects'
 
