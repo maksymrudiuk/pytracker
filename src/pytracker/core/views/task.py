@@ -155,7 +155,7 @@ class TaskDetailView(DetailView):  # pylint: disable=too-many-ancestors
         if self.request.user.is_admin:
             context['developers'] = Developer.objects.filter(project=project)
         elif self.request.user.is_developer:
-            context['developer_id'] = Developer.objects.get(user=self.request.user).id
+            context['developer_id'] = Developer.objects.get(user=self.request.user, project=project).id
 
         return context
 
