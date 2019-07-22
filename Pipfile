@@ -19,6 +19,8 @@ whitenoise = "*"
 python-decouple = "*"
 dj-database-url = "*"
 gunicorn = "*"
+django-storages = "*"
+boto = "*"
 
 [requires]
 python_version = "3.6"
