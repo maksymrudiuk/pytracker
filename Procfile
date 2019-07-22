@@ -1,1 +1,1 @@
-web: gunicorn pytracker.wsgi
+web: gunicorn pytracker.wsgi --log-file -
