@@ -18,6 +18,7 @@ mysqlclient = "*"
 whitenoise = "*"
 python-decouple = "*"
 dj-database-url = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.6"
