@@ -132,7 +132,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, '.', 'media/')
 
 
 # Crispy Forms Bootstrap 4
