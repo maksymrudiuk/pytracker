@@ -17,6 +17,7 @@ celery = "*"
 mysqlclient = "*"
 whitenoise = "*"
 python-decouple = "*"
+dj-database-url = "*"
 
 [requires]
 python_version = "3.6"
