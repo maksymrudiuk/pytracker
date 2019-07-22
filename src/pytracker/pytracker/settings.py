@@ -126,13 +126,13 @@ USE_TZ = True
 STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, '..', 'frontend/static')
+    os.path.join(BASE_DIR, '..', 'frontend/static/')
 ]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media/')
 
 
 # Crispy Forms Bootstrap 4
