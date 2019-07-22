@@ -1,0 +1,129 @@
+.row,
+.container-fluid {
+    margin-left:   0!important;
+    margin-right:  0!important;
+    padding-left:  0!important;
+    padding-right: 0!important;
+}
+
+.content {
+    width:      100%;
+    min-height: calc(100vh - 160px);
+}
+
+.form-row {
+    margin: 1em;
+}
+
+.user-photo {
+    width:      auto;
+    height:     auto;
+    margin-top: 2em;
+}
+
+.personal-info {
+    margin-top: 1em;
+}
+
+.left-card-btn {
+    float:   right;
+    color: white!important;
+    margin:  0 .5em;
+}
+
+.section-title {
+    margin-top: 1em;
+}
+
+.work-overview {
+    margin: 1em 0 1em 0;
+}
+
+.card-container {
+    padding: 1em!important;
+}
+
+.project-view {
+    margin-top: 1em;
+}
+
+.signup-form {
+    margin: 2em
+}
+
+.form-signin {
+    width:     100%;
+    max-width: 330px;
+    padding:   15px;
+    margin:    auto;
+}
+
+.task {
+    margin-bottom: 1em;
+}
+
+.signin-btn {
+    margin-top: 1em;
+}
+
+.info-message {
+    margin-top:    2em;
+    margin-bottom: 2em;
+}
+
+.footer {
+    z-index:          9998;
+    width:            100%;
+    height:           auto;
+    min-height:       40px;
+    position:         relative;
+    background-color: #2D3035;
+    color:            white;
+    margin:           0;
+    bottom:           0;
+}
+
+.copyright-info{
+    line-height: 40px;
+    margin-bottom: 0px;
+}
+
+.crispy-btn {
+    margin-left:  .25em!important;
+    margin-right: .25em!important;
+}
+
+.header-title {
+    font-size: 1.2em;
+}
+
+#ajax-progress-indicator,
+#ajax-error {
+    display: none;
+}
+
+.tip {
+    color: white!important;
+}
+
+.tip:hover {
+    text-decoration: underline;
+}
+
+/* Digital Clock */
+.time {
+    display: inline-block;
+    color: #343A40;
+}
+
+.digital-clock {
+    border-radius:      5px;
+    background-color: white;
+    text-align:         center;
+    color:            #343A40;
+}
+
+.clock-body {
+    font-size:   40px;
+    font-weight: 700;
+}
