@@ -1,2 +1,2 @@
 web: gunicorn pytracker.wsgi --log-file -
-worker: celery worker pytracker -l info
+worker: celery -A pytracker worker -l info
