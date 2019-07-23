@@ -171,4 +171,4 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply-admin@site.mail'
 
 # Celery settings
-BROKER_URL = config('CLOUDAMQP_URL', default='amqp://')
+BROKER_URL = config('CLOUDAMQP_URL')
