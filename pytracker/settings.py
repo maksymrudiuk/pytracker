@@ -78,6 +78,8 @@ TEMPLATES = [
     },
 ]
 
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
+
 WSGI_APPLICATION = 'pytracker.wsgi.application'
 
 
@@ -149,14 +151,13 @@ STATICFILES_DIRS = [
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 
-
+# Media configuration
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media/')
 DEFAULT_FILE_STORAGE = 'pytracker.storage_backends.MediaStorage'
 
 # Crispy Forms Bootstrap 4
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
 
 # Custom user model
 AUTH_USER_MODEL = 'user.UserProfile'
@@ -165,8 +166,9 @@ AUTH_USER_MODEL = 'user.UserProfile'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
-
 # Test Email Settings
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply-admin@site.mail'
+
+# Celery settings
+BROKER_URL = config('CLOUDAMQP_URL', default='amqp://')
