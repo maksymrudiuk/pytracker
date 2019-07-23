@@ -40,14 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.forms',
+
+    'storages',
+
     'crispy_forms',
     'tinymce',
     'core',
-    'user'
-]
-
-INSTALLED_APPS += [
-    'storages',
+    'user',
 ]
 
 MIDDLEWARE = [
@@ -124,6 +123,21 @@ USE_L10N = True
 USE_TZ = True
 
 
+# AWS S3 Configuration
+# https://simpleisbetterthancomplex.com/tutorial/2017/08/01/how-to-setup-amazon-s3-in-a-django-project.html
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_CUSTOM_DOMAIN = '%s.s3-us-west-2.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+
+AWS_LOCATION = 'static'
+AWS_DEFAULT_ACL = None
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
@@ -132,12 +146,13 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(PROJECT_ROOT, 'static')
 ]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, '.', 'media/')
-
+MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media/')
+DEFAULT_FILE_STORAGE = 'pytracker.storage_backends.MediaStorage'
 
 # Crispy Forms Bootstrap 4
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

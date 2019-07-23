@@ -21,6 +21,7 @@ dj-database-url = "*"
 gunicorn = "*"
 django-storages = "*"
 boto = "*"
+boto3 = "*"
 
 [requires]
 python_version = "3.6"
