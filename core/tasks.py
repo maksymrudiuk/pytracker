@@ -30,15 +30,16 @@ def task_update_notification(changes, creator_email):
         if performer is not None:
             recipient_list.append(performer.user.email)
 
-
-    body = render_to_string('email/email.html', context={
+    body = 'This is important message'
+    html_body = render_to_string('email/email.html', context={
         'old': changes['old'],
         'new': changes['new'],
         'topic':topic})
 
-    email = EmailMultiAlternatives(
+    msg = EmailMultiAlternatives(
         subject='Task - {0} is update.'.format(topic),
         body=body,
         to=recipient_list
     )
-    email.send(fail_silently=False)
+    msg.attach_alternative(html_body, "text/html")
+    msg.send(fail_silently=False)

@@ -2,7 +2,7 @@
 from django import forms
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import Submit, Field
 
 from .models import UserProfile
 
@@ -55,6 +55,9 @@ class UpdateUserProfileForm(forms.ModelForm):
 
         model = UserProfile
         fields = ('first_name', 'last_name', 'photo', 'date_of_birth', )
+        widgets = {
+            'date_of_birth': forms.TextInput(attrs={'placeholder': '1999-01-01'}),
+        }
 
     def __init__(self, *args, **kwargs):
         super(UpdateUserProfileForm, self).__init__(*args, **kwargs)

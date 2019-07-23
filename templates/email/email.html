@@ -1,10 +1,13 @@
-<h4>Hello your Task {{ topic }} has been changed</h4>
+<html>
+    <body>
+        <h4>Hello your Task {{ topic }} has been changed</h4>
 
-<p><b>Changes List</b></p>
-
-    {% with title='Old Task' obj=old %}
-        {% include './describe_chages.html' %}
-    {% endwith %}
-    {% with title='New Task' obj=new %}
-        {% include './describe_chages.html' %}
-    {% endwith %}
+        <p><b>Changes List</b></p>
+        {% with title='Old Task' obj=old %}
+            {% include './describe_chages.html' %}
+        {% endwith %}
+        {% with title='New Task' obj=new %}
+            {% include './describe_chages.html' %}
+        {% endwith %}
+    </body>
+</html>
