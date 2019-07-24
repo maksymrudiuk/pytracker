@@ -6,11 +6,13 @@ from django.urls import reverse_lazy
 from django.http import (
     HttpResponseRedirect,
     JsonResponse)
+from django.views import View
+from django.views.generic.base import TemplateView
 from django.views.generic.edit import (
     CreateView,
     UpdateView,
     DeleteView)
-from django.views.generic.detail import DetailView
+from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 # Local modules
@@ -148,7 +150,8 @@ class TaskDetailView(DetailView):  # pylint: disable=too-many-ancestors
         context['project_slug_id'] = self.kwargs['slug']
         context['comments'] = Comment.objects.filter(for_task=self.object).order_by('-date_of_add')
         if self.object.status == 3:
-            context['spent_time'] = TimeJournal.objects.get(task=self.object).spent_time
+            time_journals = TimeJournal.objects.filter(task=self.object)
+            context['spent_time'] = sum([obj.spent_time for obj in time_journals])
         project = Project.objects.get(slug_id=self.kwargs['slug'])
         if self.request.user.is_admin:
             context['developers'] = Developer.objects.filter(project=project)
@@ -175,7 +178,7 @@ class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
     """ Task Delete View definition. """
 
     model = Task
-    template_name = "core/confirm_delete.html"
+    template_name = "core/confirm.html"
     context_object_name = 'context'
 
     @method_decorator(group_required("admins"), login_required)
@@ -187,6 +190,7 @@ class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
         context['question'] = 'Do you want delete Task'
         context['title'] = 'Delete Task'
         context['context_url'] = 'delete_task'
+        context['btn_class'] = 'danger'
         return context
 
     def get_success_url(self):
@@ -211,3 +215,46 @@ class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
                 *args,
                 **kwargs
             )
+
+
+class TaskStatusUpdateView(TemplateView):
+    template_name = 'core/confirm.html'
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(TaskStatusUpdateView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(TaskStatusUpdateView, self).get_context_data(**kwargs)
+        context['context'] = Task.objects.get(pk=kwargs['pk']).topic
+        context['question'] = 'Do you want finish Task'
+        context['title'] = 'Finish Task'
+        context['context_url'] = 'finish_task'
+        context['btn_class'] = 'success'
+        return context
+
+
+    def post(self, request, *args, **kwargs):
+
+        if request.POST.get('confirm_button'):
+            task = Task.objects.get(pk=kwargs['pk'])
+            task.status = 3
+            task.save()
+            messages.success(request, 'Task is finish')
+            url = reverse_lazy(
+                'user_home',
+                kwargs={
+                    'username': self.request.user.username
+                }
+            )
+            return HttpResponseRedirect("%s?tip=time_managment" % url)
+
+        elif request.POST.get('cancel_btn'):
+            messages.warning(request, 'Project adding is canceled')
+            url = reverse_lazy(
+                'user_home',
+                kwargs={
+                    'username': request.user.username,
+                }
+            )
+            return HttpResponseRedirect("%s?tip=projects" % url)

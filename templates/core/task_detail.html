@@ -64,10 +64,10 @@
                         {% endif %}
                         {% if task.performer.user == request.user %}
                             <a
-                                href="{% url 'time_journal' username=request.user.username slug=project_slug_id pk=task.id %}"
+                                href="{% url 'time_logging_add' username=request.user.username slug=project_slug_id pk=task.id %}"
                                 role="button"
                                 class="btn btn-warning left-card-btn">
-                                <span><b>Start Work</b></span>
+                                <span><b>Work</b></span>
                             </a>
                         {% endif %}
                         <a

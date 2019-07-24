@@ -12,7 +12,7 @@
             method="post">
                 {% csrf_token %}
                 <h3>{{ question }} '{{ context }}'</h3>
-                <input type="submit" value="Confirm", name="confirm_delete_button", class='btn btn-danger'>
+                <input type="submit" value="Confirm", name="confirm_button", class='btn btn-{{ btn_class }}'>
                 <input type="submit" value="Cancel", name='cancel_button', class='btn btn-secondary'>
                 <br><br>
         </form>

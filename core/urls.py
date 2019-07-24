@@ -13,10 +13,11 @@ from .views import (
     TaskUpdateView,
     TaskDetailView,
     TaskDeleteView,
+    TaskStatusUpdateView,
     CommentCreateView,
     DevelopersView,
     DevelopersAjaxDeleteView,
-    TimeJournalView,
+    TimeJournalCreateView,
 )
 
 urlpatterns = [
@@ -67,13 +68,17 @@ urlpatterns = [
         TaskUpdateView.as_view(),
         name='edit_task'),
     path(
+        'users/<username>/<slug:slug>/tasks/<int:pk>/finish/',
+        TaskStatusUpdateView.as_view(),
+        name='finish_task'),
+    path(
         'users/<username>/<slug:slug>/tasks/<int:pk>/comments/add/',
         CommentCreateView.as_view(),
         name='add_comment'),
     path(
-        'users/<username>/<slug:slug>/tasks/<int:pk>/time/',
-        TimeJournalView.as_view(),
-        name='time_journal'),
+        'users/<username>/<slug:slug>/tasks/<int:pk>/timelogging/add',
+        TimeJournalCreateView.as_view(),
+        name='time_logging_add'),
     path(
         'users/<username>/<slug:slug>/add/developers/',
         DevelopersView.as_view(),

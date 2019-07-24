@@ -185,7 +185,7 @@ class ProjectDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
     """ Project Delete View definition. """
 
     model = Project
-    template_name = "core/confirm_delete.html"
+    template_name = "core/confirm.html"
     context_object_name = 'context'
     slug_field = 'slug_id'
     slug_url_kwarg = 'slug'
@@ -199,6 +199,7 @@ class ProjectDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
         context['question'] = 'Do you want delete Project'
         context['title'] = 'Delete Project'
         context['context_url'] = 'project_delete'
+        context['btn_class'] = 'danger'
         return context
 
     def get_success_url(self):

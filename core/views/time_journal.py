@@ -13,13 +13,13 @@ from ..models import (
 from ..forms import TimeJournalForm
 
 
-class TimeJournalView(CreateView):
+class TimeJournalCreateView(CreateView):
     """ Developers View definition. """
     model = TimeJournal
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
-        return super(TimeJournalView, self).dispatch(request, *args, **kwargs)
+        return super(TimeJournalCreateView, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
 
@@ -56,16 +56,16 @@ class TimeJournalView(CreateView):
             return HttpResponseRedirect("%s?tip=tasks" % url)
 
         if form.is_valid():
-            task = Task.objects.get(pk=kwargs['pk'])
+            # task = Task.objects.get(pk=kwargs['pk'])
             # Update Task Status
-            task.status = 3
-            task.save()
+            # task.status = 3
+            # task.save()
 
             obj = form.save(commit=False)
-            obj.task = task
+            obj.task = Task.objects.get(pk=kwargs['pk'])
             obj.save()
 
-            messages.success(request, 'Task is completed')
+            messages.success(request, 'Time save')
             url = reverse_lazy(
                 'user_home',
                 kwargs={

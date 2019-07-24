@@ -10,10 +10,11 @@ from .task import (
     TaskDetailView,
     TaskCreateView,
     TaskUpdateView,
-    TaskDeleteView
+    TaskDeleteView,
+    TaskStatusUpdateView
 )
 from .comment import CommentCreateView
 from .developer import (
     DevelopersView,
     DevelopersAjaxDeleteView)
-from .time_journal import TimeJournalView
+from .time_journal import TimeJournalCreateView

@@ -14,9 +14,10 @@ class TimeJournal(models.Model):
 
     notes = models.TextField()
 
-    task = models.OneToOneField(
+    task = models.ForeignKey(
         'core.Task',
-        primary_key=True,
+        null=True,
+        default=None,
         on_delete=models.CASCADE
     )
 

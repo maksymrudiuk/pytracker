@@ -23,10 +23,16 @@
             {% endif %}
             {% if task.performer.user == user and user.is_developer %}
                 <a
-                    href="{% url 'time_journal' username=request.user.username slug=slug pk=task.id %}"
+                    href="{% url 'finish_task' username=request.user.username slug=slug pk=task.id %}"
+                    role="button"
+                    class="btn btn-success left-card-btn">
+                    <span><b>Finish</b></span>
+                </a>
+                <a
+                    href="{% url 'time_logging_add' username=request.user.username slug=slug pk=task.id %}"
                     role="button"
                     class="btn btn-warning left-card-btn">
-                    <span><b>Start Work</b></span>
+                    <span><b>Work</b></span>
                 </a>
             {% endif %}
         {% else %}

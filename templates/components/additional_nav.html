@@ -23,5 +23,12 @@
         </a>
     </li>
     {% endif %}
+    <li class="nav-item">
+        <a
+            class="nav-link {% url 'user_home' request.user.username as main %}{% if request.path == main and request.GET.tip == 'time_managment' %}active{% endif %}"
+            href="{% url 'user_home' username=request.user.username %}?tip=time_managment">
+            Time Managment
+        </a>
+    </li>
 </ul>
 <!-- Additional Navigation Menu for Home page -->

@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 # Local modules
-from ..models import Project, Task
+from ..models import Project, Task, TimeJournal
 from ..utils import slice_queryset, paginate
 
 
@@ -68,6 +68,25 @@ class UserHomeView(View):
                         context=context,
                         queryset_name='tasks'
                     )
+
+            if tip == 'time_managment':
+                if user.is_developer:
+                    tasks = Task.objects.filter(performer__user=request.user)
+                    timejournals = TimeJournal.objects.filter(task__in=tasks)
+                if user.is_admin:
+                    tasks = Task.objects.filter(creator=request.user)
+                    timejournals = TimeJournal.objects.filter(task__in=tasks)
+
+                context['title'] = 'Time Managment'
+                print(timejournals)
+                context = paginate(
+                    queryset=timejournals,
+                    pages=5,
+                    request=request,
+                    context=context,
+                    queryset_name='timejournals'
+                )
+
 
             return render(request, 'core/home.html', context=context)
 
