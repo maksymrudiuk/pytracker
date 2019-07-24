@@ -107,7 +107,7 @@
                     <b>Status:</b>&nbsp;
                     {{ task.get_status_display }}
                 </p>
-                {% if task.performer.user == request.user and task.status == 3 %}
+                {% if task.status == 3 %}
                 <p class="card-text">
                     <b>Spent Time:</b>&nbsp;
                     {{ spent_time }}&nbsp;hours
