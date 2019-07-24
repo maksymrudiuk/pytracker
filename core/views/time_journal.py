@@ -8,7 +8,8 @@ from django.contrib.auth.decorators import login_required
 # Local modules
 from ..models import (
     Task,
-    TimeJournal)
+    TimeJournal,
+    Developer)
 
 from ..forms import TimeJournalForm
 
@@ -56,13 +57,10 @@ class TimeJournalCreateView(CreateView):
             return HttpResponseRedirect("%s?tip=tasks" % url)
 
         if form.is_valid():
-            # task = Task.objects.get(pk=kwargs['pk'])
-            # Update Task Status
-            # task.status = 3
-            # task.save()
 
             obj = form.save(commit=False)
             obj.task = Task.objects.get(pk=kwargs['pk'])
+            obj.owner = request.user
             obj.save()
 
             messages.success(request, 'Time save')

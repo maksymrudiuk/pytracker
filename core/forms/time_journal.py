@@ -9,4 +9,4 @@ class TimeJournalForm(forms.ModelForm):
         """Meta definition for TimeJournalForm."""
 
         model = TimeJournal
-        fields = ['spent_time', 'notes',]
+        fields = ['spent_time', 'notes', ]

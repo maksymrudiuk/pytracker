@@ -249,12 +249,12 @@ class TaskStatusUpdateView(TemplateView):
             )
             return HttpResponseRedirect("%s?tip=time_managment" % url)
 
-        elif request.POST.get('cancel_btn'):
-            messages.warning(request, 'Project adding is canceled')
+        elif request.POST.get('cancel_button'):
+            messages.warning(request, 'Task status update is cancel.')
             url = reverse_lazy(
                 'user_home',
                 kwargs={
                     'username': request.user.username,
                 }
             )
-            return HttpResponseRedirect("%s?tip=projects" % url)
+            return HttpResponseRedirect("%s?tip=tasks" % url)

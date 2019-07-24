@@ -22,17 +22,25 @@
                 </a>
             {% endif %}
             {% if task.performer.user == user and user.is_developer %}
+                {% if task.timejournal_set.all.exists%}
                 <a
                     href="{% url 'finish_task' username=request.user.username slug=slug pk=task.id %}"
                     role="button"
-                    class="btn btn-success left-card-btn">
+                    class='btn btn-success left-card-btn'>
                     <span><b>Finish</b></span>
                 </a>
+                {% endif %}
                 <a
                     href="{% url 'time_logging_add' username=request.user.username slug=slug pk=task.id %}"
                     role="button"
                     class="btn btn-warning left-card-btn">
-                    <span><b>Work</b></span>
+                    <span><b>
+                        {% if not task.timejournal_set.all.exists%}
+                        Work
+                        {% else %}
+                        Continue
+                        {% endif %}
+                    </b></span>
                 </a>
             {% endif %}
         {% else %}

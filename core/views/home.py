@@ -56,6 +56,7 @@ class UserHomeView(View):
                 )
 
             if tip == 'tasks':
+
                 if user.is_developer:
                     tasks = Task.objects.filter(performer__user=request.user)
 
@@ -71,20 +72,20 @@ class UserHomeView(View):
 
             if tip == 'time_managment':
                 if user.is_developer:
-                    tasks = Task.objects.filter(performer__user=request.user)
-                    timejournals = TimeJournal.objects.filter(task__in=tasks)
+                    # tasks = Task.objects.filter(performer__user=)
+                    time_journals = TimeJournal.objects.filter(owner=request.user)
                 if user.is_admin:
                     tasks = Task.objects.filter(creator=request.user)
-                    timejournals = TimeJournal.objects.filter(task__in=tasks)
+                    time_journals = TimeJournal.objects.filter(task__in=tasks)
 
                 context['title'] = 'Time Managment'
-                print(timejournals)
+
                 context = paginate(
-                    queryset=timejournals,
+                    queryset=time_journals,
                     pages=5,
                     request=request,
                     context=context,
-                    queryset_name='timejournals'
+                    queryset_name='time_journals'
                 )
 
 
