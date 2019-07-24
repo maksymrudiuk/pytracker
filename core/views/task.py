@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from django.http import (
     HttpResponseRedirect,
     JsonResponse)
+from django.core.exceptions import ObjectDoesNotExist
 from django.views import View
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import (
@@ -171,11 +172,13 @@ class TaskDetailView(DetailView):  # pylint: disable=too-many-ancestors
         if task.status == 3:
             return JsonResponse({'key': 'error'})
 
-        task.performer = UserProfile.objects.get(pk=data['pk'])
-        task.status = 2
-        task.save()
-
-        return JsonResponse({'key': 'success'})
+        try:
+            task.performer = UserProfile.objects.get(pk=data['pk'], position=2)
+            task.status = 2
+            task.save()
+            return JsonResponse({'key': 'success'})
+        except ObjectDoesNotExist:
+            return JsonResponse({'key': 'error'})
 
 
 class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
