@@ -28,7 +28,7 @@ def task_update_notification(changes, creator_email):
     else:
         performer = Task.objects.get(pk=changes['pk']).performer
         if performer is not None:
-            recipient_list.append(performer.user.email)
+            recipient_list.append(performer.email)
 
     body = 'This is important message'
     html_body = render_to_string('email/email.html', context={

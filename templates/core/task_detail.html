@@ -58,7 +58,7 @@
                                 type="submit"
                                 value="Get"
                                 style="font-weight: bold;"
-                                data-developer-id="{{ developer_id }}"
+                                data-developer-id="{{ request.user.id }}"
                                 data-task-id="{{ task.id }}"
                                 data-url="{{ update_url }}">
                         {% endif %}
@@ -121,8 +121,8 @@
                 <p class="card-text">
                     <b>Performer:</b>&nbsp;
                     {% if task.performer %}
-                        {{ task.performer.user.first_name }}
-                        {{ task.performer.user.last_name }}
+                        {{ task.performer.first_name }}
+                        {{ task.performer.last_name }}
                     {% else %}
                         Task is Free
                     {% endif %}
@@ -196,7 +196,7 @@
                             class="list-group-item set-dev-task-btn list-group-item-action"
                             data-developer-id="{{ developer.id }}"
                             data-task-id="{{ task.id }}">
-                            {{ developer.user.first_name }}&nbsp;{{ developer.user.last_name }}
+                            {{ developer.first_name }}&nbsp;{{ developer.last_name }}
                         </button>
                     {% endfor %}
                 </div>

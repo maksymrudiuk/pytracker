@@ -26,17 +26,17 @@ def task_update(sender, instance, **kwargs):  # pylint: disable=unused-argument
 
                 if isinstance(field, ForeignKey):
                     if getattr(old, field.name) is not None and getattr(instance, field.name) is None:
-                        old_values.update({field.name: getattr(old, field.name).user.email})
+                        old_values.update({field.name: getattr(old, field.name).email})
                         new_values.update({field.name: None})
                     elif getattr(old, field.name) is None and getattr(instance, field.name) is not None:
                         old_values.update({field.name: None})
-                        new_values.update({field.name: getattr(instance, field.name).user.email})
+                        new_values.update({field.name: getattr(instance, field.name).email})
                     elif getattr(old, field.name) is None and getattr(instance, field.name) is None:
                         old_values.update({field.name: None})
                         new_values.update({field.name: None})
                     else:
-                        old_values.update({field.name: getattr(old, field.name).user.email})
-                        new_values.update({field.name: getattr(instance, field.name).user.email})
+                        old_values.update({field.name: getattr(old, field.name).email})
+                        new_values.update({field.name: getattr(instance, field.name).email})
                 elif isinstance(field, SmallIntegerField) and field.choices:
                     choice_dict = dict(field.choices)
                     old_values.update({field.name: choice_dict.get(getattr(old, field.name))})

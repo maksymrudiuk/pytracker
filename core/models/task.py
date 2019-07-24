@@ -79,8 +79,8 @@ class Task(models.Model):
     )
 
     performer = models.ForeignKey(
-        'core.Developer',
-        related_name='developer',
+        'user.UserProfile',
+        related_name='user_performer',
         null=True,
         blank=True,
         on_delete=models.SET_NULL

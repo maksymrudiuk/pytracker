@@ -17,12 +17,13 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 # Local modules
 from user.decorators import group_required
+from user.models import UserProfile
 from ..models import (
     Project,
     Task,
     Comment,
     Developer,
-    TimeJournal)
+    TimeJournal,)
 from ..forms import TaskCreateUpdateForm
 
 
@@ -154,24 +155,27 @@ class TaskDetailView(DetailView):  # pylint: disable=too-many-ancestors
             context['spent_time'] = sum([obj.spent_time for obj in time_journals])
         project = Project.objects.get(slug_id=self.kwargs['slug'])
         if self.request.user.is_admin:
-            context['developers'] = Developer.objects.filter(project=project)
-        elif self.request.user.is_developer:
-            context['developer_id'] = Developer.objects.get(user=self.request.user, project=project).id
+            developers = Developer.objects.filter(project=project)
+            context['developers'] = [d.user for d in developers]
+        # elif self.request.user.is_developer:
+        #     context['developer_id'] = Developer.objects.get(user=self.request.user, project=project).id
 
         return context
 
     def post(self, request, *args, **kwargs):
         """ Ajax request proccessing """
-        data = request.POST
 
+        data = request.POST
         task = Task.objects.get(pk=data['task_id'])
+
         if task.status == 3:
             return JsonResponse({'key': 'error'})
-        else:
-            task.performer = Developer.objects.get(pk=data['pk'])
-            task.status = 2
-            task.save()
-            return JsonResponse({'key': 'success'})
+
+        task.performer = UserProfile.objects.get(pk=data['pk'])
+        task.status = 2
+        task.save()
+
+        return JsonResponse({'key': 'success'})
 
 
 class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
