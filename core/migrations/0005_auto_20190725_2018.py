@@ -12,6 +12,19 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.CreateModel(
+            name='TimeJournal',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('spent_time', models.DecimalField(decimal_places=2, max_digits=5)),
+                ('notes', models.TextField()),
+                ('task', models.ForeignKey(default=None, null=True, on_delete=django.db.models.deletion.CASCADE, to='core.Task')),
+            ],
+            options={
+                'verbose_name': 'TimeJournal',
+                'verbose_name_plural': 'TimeJournals',
+            },
+        ),
         migrations.AlterField(
             model_name='timejournal',
             name='owner',
