@@ -38,8 +38,13 @@
                 </a>
             </div>
             <div class="card-body">
-                <h5 class="card-title">{{ object.name }}</h5>
-                <p class="card-text">{{ object.description | safe }}</p>
+                <p class="card-text">
+                    <b>Creator:</b>
+                    {{ object.owner.first_name }}&nbsp;{{ object.owner.last_name }}
+                    <a href="{% url 'user_profile' object.owner.username %}">({{ object.owner.username }})</a>
+                </p>
+                <p class="card-text"><b>Created at:</b>&nbsp;{{ object.created_at }}</p>
+                <p class="card-text"><b>Description:</b>{{ object.description | safe }}</p>
             </div>
         </div>
     </div>

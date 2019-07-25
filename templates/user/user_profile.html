@@ -1,0 +1,53 @@
+{% extends "../base.html" %}
+
+{% load static from staticfiles %}
+
+<!-- Start Content Block -->
+{% block content %}
+<div class="row">
+    <div class="col-lg-6 offset-lg-3">
+            <div class="card mb-3">
+                <div class="row no-gutters">
+                    <div class="col-md-4">
+                    {% if profile.photo %}
+                    <img
+                        class="img-fluid"
+                        src="{{ profile.photo.url }}"
+                        alt="User Image"
+                        width="200"
+                        height="200"
+                        style="padding: 10px">
+                    {% else %}
+                    <img
+                        class="img-fluid"
+                        src="{% static 'img/user_image.png' %}"
+                        alt="User Image"
+                        width="200"
+                        height="200"
+                        style="padding: 10px">
+                    {% endif %}
+                    </div>
+                    <div class="col-md-8">
+                    <div class="card-body">
+                        <p class="card-text"><b>First Name:&nbsp;</b>{{ profile.first_name }}</p>
+                        <p class="card-text"><b>Last Name:&nbsp;</b>{{ profile.last_name }}</p>
+                        <p class="card-text"><b>Email Address:&nbsp;</b>{{ profile.email }}</p>
+                        <p class="card-text"><b>Position:&nbsp;</b>{{ profile.get_position_display }}</p>
+                        <p class="card-text"><b>Birthday:&nbsp;</b>{{ profile.date_of_birth }}</p>
+                        <p class="card-text"><b>Status:&nbsp;</b>
+                        {% if user.is_active %}
+                        Active
+                        {% else %}
+                        Inactive
+                        {% endif %}
+                            </p>
+                        <p class="card-text"><small class="text-muted">Last login:&nbsp;{{ profile.last_login }}</small></p>
+                        <p class="card-text"><small class="text-muted">Date joined:&nbsp;{{ profile.date_joined }}</small></p>
+                    </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+{% endblock content %}
+<!-- End Content Block -->

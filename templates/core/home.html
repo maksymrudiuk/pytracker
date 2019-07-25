@@ -26,7 +26,11 @@
             </div>
             <div class="text-center personal-info">
                 <p><b>{{ user.first_name }}&nbsp;{{ user.last_name }}</b></p>
-                <p>{{ user.get_position_display }}</p>
+                <p><a
+                    class="btn btn-outline-info btn-sm"
+                    href="{% url 'user_profile' user.username %}">
+                    View profile
+                </a></p>
             </div>
         </div>
     </div>
@@ -96,7 +100,7 @@
                                             <th scope="row">{{ forloop.counter }}</th>
                                             <td>{{ developer.first_name }}</td>
                                             <td>{{ developer.last_name }}</td>
-                                            <td>{{ developer.username }}</td>
+                                            <td><a href="{% url 'user_profile' developer.username %}" title='Jump to user profile'>{{ developer.username }}</a></td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>
@@ -203,10 +207,9 @@
                                     <tr>
                                     <th scope="col">#</th>
                                     <th scope="col">Task</th>
-                                    {% if user.is_admin %}
                                     <th scope="col">First</th>
                                     <th scope="col">Last</th>
-                                    {% endif %}
+                                    <th scope="col">Username</th>
                                     <th scope="col">Time(in hours)</th>
                                     <th scope="col">Notes</th>
                                     </tr>
@@ -216,10 +219,13 @@
                                     <tr>
                                         <th scope="row">{{ forloop.counter }}</th>
                                         <td>{{ time_journal.task.topic }}</td>
-                                        {% if user.is_admin %}
-                                        <td>{{ time_journal.task.performer.first_name }}</td>
-                                        <td>{{ time_journal.task.performer.last_name }}</td>
-                                        {% endif %}
+                                        <td>{{ time_journal.owner.first_name }}</td>
+                                        <td>{{ time_journal.owner.last_name }}</td>
+                                        <td><a
+                                            href="{% url 'user_profile' time_journal.owner.username %}"
+                                            title='Jump to user profile'>
+                                            {{ time_journal.owner.username }}
+                                        </a></td>
                                         <td>{{ time_journal.spent_time }}</td>
                                         <td>{{ time_journal.notes }}</td>
                                     </tr>

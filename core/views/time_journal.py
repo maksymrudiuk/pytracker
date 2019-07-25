@@ -26,10 +26,24 @@ class TimeJournalListView(ListView):
 
         if self.request.user.is_authenticated:
             queryset = TimeJournal.objects.all()
+            filter_kwargs = dict()
+
             if self.request.GET.get('task'):
-                queryset = queryset.filter(task_id=self.request.GET.get('task'))
+                filter_kwargs.update({
+                    'task_id': self.request.GET.get('task')
+                })
+
             if self.request.GET.get('project'):
-                queryset = queryset.filter(task__project_id=self.request.GET.get('project'))
+                filter_kwargs.update({
+                    'task__project_id': self.request.GET.get('project')
+                })
+
+            if self.request.user.is_developer:
+                filter_kwargs.update({
+                    'owner': self.request.user
+                })
+
+            queryset = queryset.filter(**filter_kwargs)
         else:
             queryset = TimeJournal.objects.none()
 
