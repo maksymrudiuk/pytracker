@@ -2,17 +2,47 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
+from django.views.generic import ListView
 from django.views.generic.edit import CreateView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 # Local modules
 from ..models import (
     Task,
-    TimeJournal,
-    Developer)
-
+    TimeJournal)
 from ..forms import TimeJournalForm
+from ..utils import paginate
 
+
+class TimeJournalListView(ListView):
+    model = TimeJournal
+    template_name = "core/time_journal.html"
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(TimeJournalListView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+
+        if self.request.user.is_authenticated:
+            queryset = TimeJournal.objects.all()
+            if self.request.GET.get('task'):
+                queryset = queryset.filter(task_id=self.request.GET.get('task'))
+        else:
+            queryset = TimeJournal.objects.none()
+
+        return queryset
+
+    def get_context_data(self, **kwargs):  # pylint: disable=arguments-differ
+        context = super(TimeJournalListView, self).get_context_data(**kwargs)
+        context = paginate(
+            queryset=context['object_list'],
+            pages=5,
+            request=self.request,
+            context=context,
+            queryset_name='time_journals')
+
+        return context
 
 class TimeJournalCreateView(CreateView):
     """ Developers View definition. """

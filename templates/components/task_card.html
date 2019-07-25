@@ -10,30 +10,30 @@
                 <a
                     href="{% url 'delete_task' username=request.user.username slug=slug pk=task.id %}"
                     role="button"
-                    class="btn btn-danger left-card-btn">
+                    class="btn btn-danger left-card-btn-white">
                     <span><b>Delete</b></span>
                 </a>
                 {% endif %}
                 <a
                     href="{% url 'edit_task' username=request.user.username slug=slug pk=task.id %}"
                     role="button"
-                    class="btn btn-info left-card-btn">
+                    class="btn btn-info left-card-btn-white">
                     <span><b>Edit</b></span>
                 </a>
             {% endif %}
-            {% if task.performer.user == user and user.is_developer %}
+            {% if task.performer == user and user.is_developer %}
                 {% if task.timejournal_set.all.exists%}
                 <a
                     href="{% url 'finish_task' username=request.user.username slug=slug pk=task.id %}"
                     role="button"
-                    class='btn btn-success left-card-btn'>
+                    class='btn btn-success left-card-btn-white'>
                     <span><b>Finish</b></span>
                 </a>
                 {% endif %}
                 <a
                     href="{% url 'time_logging_add' username=request.user.username slug=slug pk=task.id %}"
                     role="button"
-                    class="btn btn-warning left-card-btn">
+                    class="btn btn-warning left-card-btn-white">
                     <span><b>
                         {% if not task.timejournal_set.all.exists%}
                         Work
@@ -48,7 +48,7 @@
             <a
                 href="{% url 'delete_task' username=request.user.username slug=slug pk=task.id %}"
                 role="button"
-                class="btn btn-danger left-card-btn">
+                class="btn btn-danger left-card-btn-white">
                 <span><b>Delete</b></span>
             </a>
             {% endif %}

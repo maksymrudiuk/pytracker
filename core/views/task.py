@@ -161,7 +161,7 @@ class TaskDetailView(DetailView):  # pylint: disable=too-many-ancestors
         context['project_slug_id'] = self.kwargs['slug']
         context['comments'] = Comment.objects.filter(for_task=self.object).order_by('-date_of_add')
 
-        if self.object.status == 3:
+        if self.object.status == 3 or self.object.status == 2:
             time_journals = TimeJournal.objects.filter(task=self.object)
             context['spent_time'] = sum([obj.spent_time for obj in time_journals])
         project = Project.objects.get(slug_id=self.kwargs['slug'])

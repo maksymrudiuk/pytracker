@@ -33,13 +33,13 @@
                         <a
                             href="{% url 'delete_task' username=request.user.username slug=project_slug_id pk=task.id %}"
                             role="button"
-                            class="btn btn-danger left-card-btn">
+                            class="btn btn-danger left-card-btn-white">
                             <span><b>Delete</b></span>
                         </a>
                         {% csrf_token %}
                         <button
                             type="button"
-                            class="btn btn-success left-card-btn"
+                            class="btn btn-success left-card-btn-white"
                             data-toggle="modal"
                             data-target="#developersModalCenter">
                             <span><b>
@@ -54,7 +54,7 @@
                         {% if not task.performer %}
                             {% csrf_token %}
                             <input
-                                class="btn btn-success set-dev-task-btn left-card-btn"
+                                class="btn btn-success set-dev-task-btn left-card-btn-white"
                                 type="submit"
                                 value="Get"
                                 style="font-weight: bold;"
@@ -66,14 +66,14 @@
                             <a
                                 href="{% url 'time_logging_add' username=request.user.username slug=project_slug_id pk=task.id %}"
                                 role="button"
-                                class="btn btn-warning left-card-btn">
+                                class="btn btn-warning left-card-btn-white">
                                 <span><b>Work</b></span>
                             </a>
                         {% endif %}
                         <a
                             href="{% url 'edit_task' username=request.user.username slug=project_slug_id pk=task.id %}"
                             role="button"
-                            class="btn btn-info left-card-btn">
+                            class="btn btn-info left-card-btn-white">
                             <span><b>Edit</b></span>
                         </a>
                     {% endif %}
@@ -82,7 +82,7 @@
                     <a
                         href="{% url 'delete_task' username=request.user.username slug=project_slug_id pk=task.id %}"
                         role="button"
-                        class="btn btn-danger left-card-btn">
+                        class="btn btn-danger left-card-btn-white">
                         <span><b>Delete</b></span>
                     </a>
                     {% endif %}
@@ -90,6 +90,14 @@
                         class="text-muted header-title">
                         &nbsp;(Task is Completed)
                     </span>
+                {% endif %}
+                {% if task.status == 3 or task.status == 2 %}
+                    <a
+                        href="{% url 'time_journal' username=request.user.username slug=project_slug_id pk=task.id %}?task={{ task.id }}"
+                        role="button"
+                        class="btn btn-outline-warning left-card-btn-inherit">
+                        <span><b>View Time Journal</b></span>
+                    </a>
                 {% endif %}
                 <!-- Control buttons zone -->
             </div>
@@ -107,7 +115,7 @@
                     <b>Status:</b>&nbsp;
                     {{ task.get_status_display }}
                 </p>
-                {% if task.status == 3 %}
+                {% if task.status == 3 or task.status == 2 %}
                 <p class="card-text">
                     <b>Spent Time:</b>&nbsp;
                     {{ spent_time }}&nbsp;hours
@@ -146,7 +154,7 @@
                 <a
                     href="{% url 'add_comment' username=request.user.username slug=project_slug_id pk=task.id %}"
                     role="button"
-                    class="btn btn-success left-card-btn">
+                    class="btn btn-success left-card-btn-white">
                     <span><b>Add</b></span>
                 </a>
             </div>

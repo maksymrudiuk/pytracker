@@ -58,7 +58,7 @@ class UserHomeView(View):
             if tip == 'tasks':
 
                 if user.is_developer:
-                    tasks = Task.objects.filter(performer=request.user)
+                    tasks = Task.objects.filter(performer=request.user).order_by('status')
                     context['title'] = 'Tasks'
                     context = paginate(
                         queryset=tasks,

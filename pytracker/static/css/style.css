@@ -25,11 +25,19 @@
     margin-top: 1em;
 }
 
-.left-card-btn {
+.left-card-btn-white,
+.left-card-btn-inherit {
     float:   right;
-    color: white!important;
     margin:  0 .5em;
 }
+
+.left-card-btn-white {
+    color: white!important;
+}
+
+/* .left-card-btn-black {
+    color: black!important;
+} */
 
 .section-title {
     margin-top: 1em;
