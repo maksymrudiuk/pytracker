@@ -31,6 +31,11 @@
                     href="{% url 'user_profile' user.username %}">
                     View profile
                 </a></p>
+                <p><a
+                    class="btn btn-outline-primary btn-sm"
+                    href="{% url 'update_user' user.id %}">
+                    Edit profile
+                </a></p>
             </div>
         </div>
     </div>

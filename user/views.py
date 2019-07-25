@@ -75,6 +75,12 @@ class UpdateUserProfileView(UpdateView):
                 *args,
                 **kwargs
             )
+        if self.obj.id == request.user.id and self.request.user.is_admin:
+            return super(UpdateUserProfileView, self).dispatch(
+                request,
+                *args,
+                **kwargs
+            )
 
         return HttpResponseRedirect(self.get_success_url())
 
