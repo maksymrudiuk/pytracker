@@ -30,14 +30,12 @@
                     <span><b>Edit</b></span>
                 </a>
                 {% endif %}
-                {% if task.status == 3 or task.status == 2 %}
                 <a
                     href="{% url 'time_journal' username=request.user.username %}?project={{ object.id }}"
                     role="button"
                     class="btn btn-outline-warning left-card-btn-inherit">
                     <span><b>View Time Journal</b></span>
                 </a>
-                {% endif %}
             </div>
             <div class="card-body">
                 <p class="card-text">
