@@ -17,6 +17,7 @@ class TimeJournal(models.Model):
     owner = models.ForeignKey(
         'user.UserProfile',
         null=True,
+        default=None,
         on_delete=models.CASCADE
     )
 
