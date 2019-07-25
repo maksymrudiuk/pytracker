@@ -270,7 +270,7 @@ class TaskStatusUpdateView(TemplateView):
                 }
             )
 
-            return HttpResponseRedirect("%s?tip=time_managment" % url)
+            return HttpResponseRedirect("%s?tip=tasks" % url)
 
         elif request.POST.get('cancel_button'):
             messages.warning(request, 'Task status update is cancel.')
