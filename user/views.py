@@ -1,9 +1,12 @@
 """ This module include Views definition for User model """
-from django.urls import reverse, reverse_lazy
+from django.shortcuts import render
+from django.urls import reverse
 from django.views.generic.edit import (
     CreateView,
     UpdateView)
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import authenticate, login
+from django.http import HttpResponseRedirect
 from django.views.generic.detail import DetailView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -19,11 +22,41 @@ class SignUpView(CreateView):
     """ Sign up User View Definition. """
 
     model = UserProfile
-    form_class = BaseSignUpUserProfileForm
     template_name = 'user/form.html'
 
-    def get_success_url(self):
-        return reverse('update-user', kwargs={'pk': self.object.pk})
+    def get(self, request, *args, **kwargs):
+
+        context = {
+            'form': BaseSignUpUserProfileForm,
+            'title': 'Sign Up'
+        }
+
+        return render(request, 'user/form.html', context)
+
+    def post(self, request, *args, **kwargs):
+
+        form = BaseSignUpUserProfileForm(self.request.POST) # pylint: disable=attribute-defined-outside-init
+
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+
+            if obj.position == 1:
+                obj.groups.add(UserGroup.objects.get(name='admins'))
+            if obj.position == 2:
+                obj.groups.add(UserGroup.objects.get(name='developers'))
+
+            obj.save()
+
+            current_user = authenticate(
+                username=form.cleaned_data['username'],
+                password=form.cleaned_data['password1']
+            )
+            login(self.request, current_user)
+
+            return HttpResponseRedirect(reverse('update_user', kwargs={'pk': obj.id}))
+
+        return render(request, 'user/form.html', {'form': form})
 
 
 class UpdateUserProfileView(UpdateView):
@@ -33,26 +66,29 @@ class UpdateUserProfileView(UpdateView):
     form_class = UpdateUserProfileForm
     template_name = 'user/form.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        self.obj = self.get_object()
+
+        if (self.obj.id == request.user.id or self.request.user.is_admin) and self.obj.is_developer:
+            return super(UpdateUserProfileView, self).dispatch(
+                request,
+                *args,
+                **kwargs
+            )
+
+        return HttpResponseRedirect(self.get_success_url())
+
     def get_success_url(self):
         return reverse('home')
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
 
-        self.object = self.get_object()  # pylint: disable=attribute-defined-outside-init
+        context = {
+            'form': UpdateUserProfileForm(instance=self.obj),
+            'title': 'Update User'
+        }
 
-        if self.object.position == 1:
-            self.object.groups.add(UserGroup.objects.get(name='admins'))
-        if self.object.position == 2:
-            self.object.groups.add(UserGroup.objects.get(name='developers'))
-
-        self.object.save()
-
-        return super(UpdateUserProfileView, self).post(
-            request,
-            *args,
-            **kwargs
-        )
-
+        return render(request, 'user/form.html', context)
 
 
 class UserProfileDetailView(DetailView):

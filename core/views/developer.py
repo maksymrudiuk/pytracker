@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.views import View
 from django.views.generic.base import TemplateView
-# from django.views.generic.edit import DeleteView
+from django.views.generic import ListView
 from django.views.generic.detail import SingleObjectMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
@@ -12,13 +12,14 @@ from django.contrib.auth.decorators import login_required
 from user.models import UserProfile
 from user.decorators import group_required
 from ..models import Project, Developer
+from ..utils import paginate
 
 # from ..utils import paginate
 
 
 class DevelopersView(TemplateView):
     """ Developers View definition. """
-    template_name = 'core/developers_list.html'
+    template_name = 'core/free_developers_list.html'
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
@@ -31,7 +32,7 @@ class DevelopersView(TemplateView):
 
         context = super(DevelopersView, self).get_context_data(**kwargs)
         context['update_url'] = reverse_lazy(
-            'add_developer_in_project',
+            'free_developers_list',
             kwargs={
                 'username': self.request.user.username,
                 'slug': kwargs['slug']
@@ -76,3 +77,32 @@ class DevelopersAjaxDeleteView(SingleObjectMixin, View):
         self.object.delete()
 
         return JsonResponse({'key': 'success'})
+
+
+class UserDevelopersListView(ListView):
+    model = UserProfile
+    template_name = "core/developers_list.html"
+
+    @method_decorator(group_required("admins"), login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserDevelopersListView, self).dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+
+        if self.request.user.is_authenticated:
+            queryset = UserProfile.objects.filter(position=2)
+        else:
+            queryset = UserProfile.objects.none()
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super(UserDevelopersListView, self).get_context_data(**kwargs)
+        context = paginate(
+            queryset=context['object_list'],
+            pages=10,
+            request=self.request,
+            context=context,
+            queryset_name='developers'
+        )
+        return context

@@ -92,7 +92,7 @@
             <div class="card-header">
                 <span class="header-title">Team</span>
                 <a
-                    href="{% url 'add_developer_in_project' username=request.user.username slug=object.slug_id %}"
+                    href="{% url 'free_developers_list' username=request.user.username slug=object.slug_id %}"
                     role="button"
                     class="btn btn-success left-card-btn-white">
                     <span><b>Add</b></span>

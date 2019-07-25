@@ -8,6 +8,6 @@ from .views import (
 
 urlpatterns = [
     path('signup', SignUpView.as_view(), name='signup'),
-    path('<int:pk>/update', UpdateUserProfileView.as_view(), name='update-user'),
+    path('<int:pk>/update', UpdateUserProfileView.as_view(), name='update_user'),
     path('profile/<str:username>', UserProfileDetailView.as_view(), name='user_profile')
 ]

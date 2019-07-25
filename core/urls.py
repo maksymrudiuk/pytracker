@@ -17,6 +17,7 @@ from .views import (
     CommentCreateView,
     DevelopersView,
     DevelopersAjaxDeleteView,
+    UserDevelopersListView,
     TimeJournalListView,
     TimeJournalCreateView,
 )
@@ -35,6 +36,11 @@ urlpatterns = [
         'projects/',
         ProjectListView.as_view(),
         name='projects'
+    ),
+    path(
+        'developers/',
+        UserDevelopersListView.as_view(),
+        name='developers_list'
     ),
     path(
         'projects/add/',
@@ -85,9 +91,9 @@ urlpatterns = [
         TimeJournalCreateView.as_view(),
         name='time_logging_add'),
     path(
-        'users/<username>/<slug:slug>/add/developers/',
+        'users/<username>/<slug:slug>/developers/',
         DevelopersView.as_view(),
-        name='add_developer_in_project'),
+        name='free_developers_list'),
     path(
         'users/<username>/<slug:slug>/delete/developers/<int:pk>',
         DevelopersAjaxDeleteView.as_view(),

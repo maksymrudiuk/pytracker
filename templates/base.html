@@ -82,6 +82,15 @@
                                 Overview
                             </a>
                         </li>
+                        {% if user.is_admin %}
+                        <li class="nav-item">
+                            <a
+                                class="nav-link tip"
+                                href="{% url 'developers_list' %}">
+                                Developers
+                            </a>
+                        </li>
+                        {% endif %}
                         <li class="nav-item">
                             <a
                                 class="nav-link tip"
