@@ -28,6 +28,8 @@ class TimeJournalListView(ListView):
             queryset = TimeJournal.objects.all()
             if self.request.GET.get('task'):
                 queryset = queryset.filter(task_id=self.request.GET.get('task'))
+            if self.request.GET.get('project'):
+                queryset = queryset.filter(task__project_id=self.request.GET.get('project'))
         else:
             queryset = TimeJournal.objects.none()
 

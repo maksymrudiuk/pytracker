@@ -93,7 +93,7 @@
                 {% endif %}
                 {% if task.status == 3 or task.status == 2 %}
                     <a
-                        href="{% url 'time_journal' username=request.user.username slug=project_slug_id pk=task.id %}?task={{ task.id }}"
+                        href="{% url 'time_journal' username=request.user.username %}?task={{ task.id }}"
                         role="button"
                         class="btn btn-outline-warning left-card-btn-inherit">
                         <span><b>View Time Journal</b></span>

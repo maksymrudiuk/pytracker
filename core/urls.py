@@ -77,7 +77,7 @@ urlpatterns = [
         CommentCreateView.as_view(),
         name='add_comment'),
     path(
-        'users/<username>/<slug:slug>/tasks/<int:pk>/metrics/',
+        'users/<username>/metrics',
         TimeJournalListView.as_view(),
         name='time_journal'),
     path(

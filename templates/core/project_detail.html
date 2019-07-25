@@ -30,6 +30,12 @@
                     <span><b>Edit</b></span>
                 </a>
                 {% endif %}
+                <a
+                    href="{% url 'time_journal' username=request.user.username %}?project={{ object.id }}"
+                    role="button"
+                    class="btn btn-outline-warning left-card-btn-inherit">
+                    <span><b>View Time Journal</b></span>
+                </a>
             </div>
             <div class="card-body">
                 <h5 class="card-title">{{ object.name }}</h5>
