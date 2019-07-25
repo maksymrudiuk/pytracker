@@ -29,6 +29,7 @@ class CommentCreateView(CreateView):  # pylint: disable=too-many-ancestors
             'form': CommentAddForm,
             'title': 'Add Comment'
         }
+
         return render(request, 'core/form.html', context=context)
 
     def post(self, request, *args, **kwargs):
@@ -40,6 +41,7 @@ class CommentCreateView(CreateView):  # pylint: disable=too-many-ancestors
             obj.owner = request.user
             obj.for_task = Task.objects.get(pk=kwargs['pk'])
             obj.save()
+
             return HttpResponseRedirect(reverse_lazy(
                 'detail_task',
                 kwargs={

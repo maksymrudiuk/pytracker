@@ -29,6 +29,7 @@ class UserHomeView(View):
         if user.is_authenticated:
 
             if tip is None:
+
                 if user.is_admin or user.is_superuser:
                     projects = Project.objects.filter(owner=user).order_by('-created_at')
                     context['developers'] = self.get_developers_list(projects)
@@ -46,7 +47,6 @@ class UserHomeView(View):
                     projects = Project.objects.filter(developers=user).order_by('-created_at')
 
                 context['title'] = 'Projects'
-
                 context = paginate(
                     queryset=projects,
                     pages=3,
@@ -58,10 +58,8 @@ class UserHomeView(View):
             if tip == 'tasks':
 
                 if user.is_developer:
-                    tasks = Task.objects.filter(performer__user=request.user)
-
+                    tasks = Task.objects.filter(performer=request.user)
                     context['title'] = 'Tasks'
-
                     context = paginate(
                         queryset=tasks,
                         pages=5,
@@ -71,8 +69,8 @@ class UserHomeView(View):
                     )
 
             if tip == 'time_managment':
+
                 if user.is_developer:
-                    # tasks = Task.objects.filter(performer__user=)
                     time_journals = TimeJournal.objects.filter(owner=request.user)
                 if user.is_admin:
                     tasks = Task.objects.filter(creator=request.user)

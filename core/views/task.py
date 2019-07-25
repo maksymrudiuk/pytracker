@@ -7,13 +7,12 @@ from django.http import (
     HttpResponseRedirect,
     JsonResponse)
 from django.core.exceptions import ObjectDoesNotExist
-from django.views import View
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import (
     CreateView,
     UpdateView,
     DeleteView)
-from django.views.generic.detail import DetailView, SingleObjectMixin
+from django.views.generic.detail import DetailView
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 # Local modules
@@ -52,6 +51,7 @@ class TaskCreateView(CreateView):  # pylint: disable=too-many-ancestors
 
         if request.POST.get('cancel_btn'):
             messages.warning(request, 'Task adding is canceled')
+
             return HttpResponseRedirect(reverse_lazy(
                 'project_detail',
                 kwargs={
@@ -65,6 +65,7 @@ class TaskCreateView(CreateView):  # pylint: disable=too-many-ancestors
             obj.creator = self.request.user
             obj.project = Project.objects.get(slug_id=self.kwargs['slug'])
             obj.save()
+
             return HttpResponseRedirect(reverse_lazy(
                 'project_detail',
                 kwargs={
@@ -86,8 +87,10 @@ class TaskUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()  # pylint: disable=attribute-defined-outside-init
+
         if self.object.status == 3:
             messages.warning(request, 'Task is not editable after completed. You can only delete.')
+
             return HttpResponseRedirect(reverse_lazy(
                 'project_detail',
                 kwargs={
@@ -95,6 +98,7 @@ class TaskUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
                     'slug': self.kwargs['slug']
                 }
             ))
+
         return super(TaskUpdateView, self).dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
@@ -110,6 +114,7 @@ class TaskUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
 
         if request.POST.get('cancel_btn'):
             messages.warning(request, 'Task editing is canceled')
+
             return HttpResponseRedirect(reverse_lazy(
                 'project_detail',
                 kwargs={
@@ -119,6 +124,7 @@ class TaskUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
             ))
         else:
             messages.success(request, 'Task successful saved')
+
             return super(TaskUpdateView, self).post(
                 request,
                 *args,
@@ -137,11 +143,14 @@ class TaskDetailView(DetailView):  # pylint: disable=too-many-ancestors
         return super(TaskDetailView, self).dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
+
         if self.request.user.is_authenticated:
+
             if self.request.user.is_admin:
                 queryset = Task.objects.filter(creator=self.request.user)
             elif self.request.user.is_developer:
                 queryset = Task.objects.filter(project__slug_id=self.kwargs['slug'])
+
         else:
             queryset = Task.objects.none()
 
@@ -151,15 +160,15 @@ class TaskDetailView(DetailView):  # pylint: disable=too-many-ancestors
         context = super(TaskDetailView, self).get_context_data(**kwargs)
         context['project_slug_id'] = self.kwargs['slug']
         context['comments'] = Comment.objects.filter(for_task=self.object).order_by('-date_of_add')
+
         if self.object.status == 3:
             time_journals = TimeJournal.objects.filter(task=self.object)
             context['spent_time'] = sum([obj.spent_time for obj in time_journals])
         project = Project.objects.get(slug_id=self.kwargs['slug'])
+
         if self.request.user.is_admin:
             developers = Developer.objects.filter(project=project)
             context['developers'] = [d.user for d in developers]
-        # elif self.request.user.is_developer:
-        #     context['developer_id'] = Developer.objects.get(user=self.request.user, project=project).id
 
         return context
 
@@ -177,6 +186,7 @@ class TaskDetailView(DetailView):  # pylint: disable=too-many-ancestors
             task.status = 2
             task.save()
             return JsonResponse({'key': 'success'})
+
         except ObjectDoesNotExist:
             return JsonResponse({'key': 'error'})
 
@@ -198,6 +208,7 @@ class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
         context['title'] = 'Delete Task'
         context['context_url'] = 'delete_task'
         context['btn_class'] = 'danger'
+
         return context
 
     def get_success_url(self):
@@ -206,8 +217,10 @@ class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
             'slug': self.kwargs['slug']})
 
     def post(self, request, *args, **kwargs):
+
         if request.POST.get('cancel_button'):
             messages.warning(request, 'Task deleting is canceled')
+
             return HttpResponseRedirect(reverse_lazy(
                 'project_detail',
                 kwargs={
@@ -217,6 +230,7 @@ class TaskDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
             ))
         else:
             messages.success(request, 'Task successful delete')
+
             return super(TaskDeleteView, self).post(
                 request,
                 *args,
@@ -238,6 +252,7 @@ class TaskStatusUpdateView(TemplateView):
         context['title'] = 'Finish Task'
         context['context_url'] = 'finish_task'
         context['btn_class'] = 'success'
+
         return context
 
 
@@ -254,6 +269,7 @@ class TaskStatusUpdateView(TemplateView):
                     'username': self.request.user.username
                 }
             )
+
             return HttpResponseRedirect("%s?tip=time_managment" % url)
 
         elif request.POST.get('cancel_button'):
@@ -264,4 +280,5 @@ class TaskStatusUpdateView(TemplateView):
                     'username': request.user.username,
                 }
             )
+
             return HttpResponseRedirect("%s?tip=tasks" % url)

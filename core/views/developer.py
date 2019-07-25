@@ -56,6 +56,7 @@ class DevelopersView(TemplateView):
             user=user,
             project=project)
         obj.save()
+
         return JsonResponse({'key': 'success'})
 
 
@@ -73,4 +74,5 @@ class DevelopersAjaxDeleteView(SingleObjectMixin, View):
         """ POST method processing. """
         self.object = self.get_object()  # pylint: disable=attribute-defined-outside-init
         self.object.delete()
+
         return JsonResponse({'key': 'success'})

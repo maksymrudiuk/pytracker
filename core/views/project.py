@@ -50,6 +50,7 @@ class ProjectListView(ListView):  # pylint: disable=too-many-ancestors
             request=self.request,
             context=context,
             queryset_name='projects')
+
         return context
 
 
@@ -68,10 +69,12 @@ class ProjectDetailView(DetailView):  # pylint: disable=too-many-ancestors
     def get_queryset(self):
 
         if self.request.user.is_authenticated:
+
             if self.request.user.is_admin:
                 queryset = Project.objects.filter(owner=self.request.user)
             elif self.request.user.is_developer:
                 queryset = Project.objects.filter(developers=self.request.user)
+
         else:
             queryset = Project.objects.none()
 
@@ -81,6 +84,7 @@ class ProjectDetailView(DetailView):  # pylint: disable=too-many-ancestors
         context = super(ProjectDetailView, self).get_context_data(**kwargs)
         context['tasks'] = Task.objects.filter(project=self.object)
         context['developers'] = Developer.objects.filter(project=self.object)
+
         return context
 
 
@@ -114,6 +118,7 @@ class ProjectCreateView(CreateView):  # pylint: disable=too-many-ancestors
                     'username': request.user.username,
                 }
             )
+
             return HttpResponseRedirect("%s?tip=projects" % url)
 
         if form.is_valid():
@@ -129,6 +134,7 @@ class ProjectCreateView(CreateView):  # pylint: disable=too-many-ancestors
             obj.slug_id = slugify(obj.name) + '-' + str(obj.id)
             obj.save()
             messages.success(request, 'Project successful created')
+
             return HttpResponseRedirect(reverse_lazy(
                 'project_detail',
                 kwargs={
@@ -165,6 +171,7 @@ class ProjectUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
 
         if request.POST.get('cancel_btn'):
             messages.warning(request, 'Project editing is canceled')
+
             return HttpResponseRedirect(reverse_lazy(
                 'project_detail',
                 kwargs={
@@ -174,6 +181,7 @@ class ProjectUpdateView(UpdateView):  # pylint: disable=too-many-ancestors
             ))
         else:
             messages.success(request, 'Project successful saved')
+
             return super(ProjectUpdateView, self).post(
                 request,
                 *args,
@@ -200,6 +208,7 @@ class ProjectDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
         context['title'] = 'Delete Project'
         context['context_url'] = 'project_delete'
         context['btn_class'] = 'danger'
+
         return context
 
     def get_success_url(self):
@@ -207,8 +216,10 @@ class ProjectDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
         return '%s?tip=projects' % url
 
     def post(self, request, *args, **kwargs):
+
         if request.POST.get('cancel_button'):
             messages.warning(request, 'Project deleting is canceled')
+
             return HttpResponseRedirect(reverse_lazy(
                 'project_detail',
                 kwargs={
@@ -218,6 +229,7 @@ class ProjectDeleteView(DeleteView):  # pylint: disable=too-many-ancestors
             ))
         else:
             messages.success(request, 'Project successful delete')
+
             return super(ProjectDeleteView, self).post(
                 request,
                 *args,
